@@ -1,0 +1,28 @@
+﻿<Window x:Class="Pharmcheck.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Pharmcheck"
+        mc:Ignorable="d"
+        Title="Pharmcheck" 
+        Height="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}" 
+        Width="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Width}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <ToolBar>
+            <CheckBox x:Name="CheckBoxDbView" Content="База данных" Margin="5,0,5,0" Style="{DynamicResource Light}" Checked="CheckBoxDbView_Checked"/>
+            <Separator/>
+            <CheckBox x:Name="CheckBoxParsing" Content="Парсинг" Margin="5,0,5,0" Style="{DynamicResource Light}" Checked="CheckBoxParsing_Checked"/>
+            <Separator/>
+            <CheckBox x:Name="CheckBoxImport" Content="Импорт" Margin="5,0,5,0" Style="{DynamicResource Light}" Checked="CheckBoxImport_Checked"/>
+        </ToolBar>
+
+        <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" Grid.Row="1"/>
+
+    </Grid>
+</Window>
