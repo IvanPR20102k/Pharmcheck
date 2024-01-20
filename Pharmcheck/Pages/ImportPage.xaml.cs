@@ -18,6 +18,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CsvHelper;
 using CsvHelper.Configuration;
+using Pharmcheck.Entities;
 
 namespace Pharmcheck.Pages
 {

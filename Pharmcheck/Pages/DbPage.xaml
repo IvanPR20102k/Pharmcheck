@@ -7,7 +7,7 @@
       mc:Ignorable="d"
       d:DesignHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}"
       d:DesignWidth="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Width}"
-      Title="DbPage">
+      Title="DbPage" Loaded="Page_Loaded">
 
     <ScrollViewer>
         <Grid>

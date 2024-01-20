@@ -14,16 +14,16 @@ namespace Pharmcheck.Entities
         public DbSet<Product> Products { get; set; }
         public DbSet<Comparison> Comparisons { get; set; }
 
-        public string DbPath { get; }
-
-        public ApplicationContext()
-        {
-            var folder = Environment.SpecialFolder.LocalApplicationData;
-            var path = Environment.GetFolderPath(folder);
-            DbPath = System.IO.Path.Join(path, "blogging.db");
-        }
+        //public string DbPath { get; }
+        //
+        //public ApplicationContext()
+        //{
+        //    var folder = Environment.SpecialFolder.LocalApplicationData;
+        //    var path = Environment.GetFolderPath(folder);
+        //    DbPath = System.IO.Path.Join(path, "Pharmcheck.db");
+        //}
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlite($"Data Source={DbPath}");
+        => optionsBuilder.UseSqlite($"Data Source=Pharmcheck.db");
     }
 }

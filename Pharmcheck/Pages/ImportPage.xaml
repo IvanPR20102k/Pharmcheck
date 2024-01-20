@@ -15,12 +15,13 @@
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="250"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <StackPanel>
             <Button x:Name="ButtonOpen" Content="Открыть .csv файл" Margin="5" Click="ButtonOpen_Click"/>
+            <TextBlock Text="Данные принадлежат:" Margin="5,5,5,0"/>
             <ComboBox x:Name="ComboBoxPharmacies" Margin="5"/>
             <Button x:Name="ButtonImport" Content="Импортировать" Margin="5"/>
         </StackPanel>

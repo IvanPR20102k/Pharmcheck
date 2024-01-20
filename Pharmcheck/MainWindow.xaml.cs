@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Pharmcheck.Entities;
 using Pharmcheck.Pages;
 
 namespace Pharmcheck
@@ -56,5 +57,22 @@ namespace Pharmcheck
             CheckBoxImport.IsEnabled = false;
             MainFrame.Navigate(importPage);
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+        }
     }
+
+    //public class Helper
+    //{
+    //    public static ApplicationContext? db;
+    //    public static ApplicationContext GetContext()
+    //    {
+    //        if (db == null)
+    //        {
+    //            db = new ApplicationContext();
+    //        }
+    //        return db;
+    //    }
+    //}
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pharmcheck.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,18 @@ namespace Pharmcheck.Pages
     /// </summary>
     public partial class DbPage : Page
     {
+        ApplicationContext db = new();
         public DbPage()
         {
             InitializeComponent();
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            db.Database.EnsureCreated();
+            //db.Add(new Pharmacy { Name = "Аптека легко" });
+            //db.SaveChanges();
+            DataGridPharmacies.ItemsSource = db.Pharmacies.ToList();
         }
     }
 }
