@@ -9,10 +9,10 @@ namespace Pharmcheck.Entities
     public class Import
     {
         public int ID { get; set; }
-        public DateTime DateTime { get; set; }
+        public string ImportDateTime { get; set; } = null!;
 
-        public required int PharmacyID { get; set; }
-        public required Pharmacy Pharmacy { get; set; }
+        public int PharmacyID { get; set; }
+        public Pharmacy Pharmacy { get; set; } = null!;
 
         public List<Product> Products { get; } = [];
     }

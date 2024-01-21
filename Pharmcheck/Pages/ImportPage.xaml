@@ -4,7 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Pharmcheck.Pages"
-      mc:Ignorable="d" 
+      mc:Ignorable="d"
       d:DesignHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}"
       d:DesignWidth="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Width}"
       Title="ImportPage">
@@ -22,13 +22,11 @@
         <StackPanel>
             <Button x:Name="ButtonOpen" Content="Открыть .csv файл" Margin="5" Click="ButtonOpen_Click"/>
             <TextBlock Text="Данные принадлежат:" Margin="5,5,5,0"/>
-            <ComboBox x:Name="ComboBoxPharmacies" Margin="5"/>
-            <Button x:Name="ButtonImport" Content="Импортировать" Margin="5"/>
+            <ComboBox x:Name="ComboBoxPharmacies" DisplayMemberPath="Name" Margin="5" SelectionChanged="ComboBoxPharmacies_SelectionChanged"/>
+            <Button x:Name="ButtonImport" Content="Импортировать" IsEnabled="False" Margin="5" Click="ButtonImport_Click"/>
         </StackPanel>
 
-        <DataGrid x:Name="DataGridPreview" Grid.Column="1" Margin="5,5,5,0">
-            
-        </DataGrid>
+        <DataGrid x:Name="DataGridPreview" Style="{x:Null}" Grid.Column="1" Margin="5,5,5,0"/>
         <StackPanel Background="LightGray" Grid.Column="1" Grid.Row="1" Margin="5,0,5,5">
             
         </StackPanel>

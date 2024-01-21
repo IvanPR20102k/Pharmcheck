@@ -29,10 +29,11 @@ namespace Pharmcheck.Pages
     {
         public string fileContent = string.Empty;
         public string filePath = string.Empty;
-        List<ProductImport> outputRows = [];
+        private List<ProductImport> outputRows = [];
         public ImportPage()
         {
             InitializeComponent();
+            ComboBoxPharmacies.ItemsSource = DbPage.db.Pharmacies.ToList();
         }
 
         private void ButtonOpen_Click(object sender, RoutedEventArgs e)
@@ -47,13 +48,13 @@ namespace Pharmcheck.Pages
                 if (openFileDialog.ShowDialog() == true)
                 {
                     filePath = openFileDialog.FileName;
-                    var reader = new StreamReader(filePath);
+                    using var reader = new StreamReader(filePath);
                     var config = new CsvConfiguration(CultureInfo.InvariantCulture)
                     {
                         Delimiter = ";",
                     };
-                    var csv = new CsvReader(reader, config);
-                    var outputRows = csv.GetRecords<ProductImport>();
+                    using var csv = new CsvReader(reader, config);
+                    outputRows = csv.GetRecords<ProductImport>().ToList();
                 }
                 DataGridPreview.ItemsSource = outputRows;
             }
@@ -65,10 +66,48 @@ namespace Pharmcheck.Pages
 
         public class ProductImport
         {
-            public required string ProductID { get; set; }
-            public required string ProductName { get; set; }
+            public string ProductID { get; set; } = null!;
+            public string ProductName { get; set; } = null!;
             public int PriceMin { get; set; }
             public int PriceMax { get; set; }
+        }
+
+        private void ButtonImport_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (ComboBoxPharmacies.SelectedItem is not Pharmacy pharmacy) { return; }
+                Import newImport = new()
+                {
+                    PharmacyID = pharmacy.ID,
+                    ImportDateTime = File.GetCreationTime(filePath).ToString(),
+                };
+                DbPage.db.Update(pharmacy);
+                foreach (var rawProduct in outputRows)
+                {
+                    Product newProduct = new()
+                    {
+                        ShopID = rawProduct.ProductID,
+                        Name = rawProduct.ProductName,
+                        PriceMin = Convert.ToSingle(rawProduct.PriceMin) / 100,
+                        PriceMax = Convert.ToSingle(rawProduct.PriceMax) / 100
+                    };
+                    newImport.Products.Add(newProduct);
+                }
+                pharmacy.Imports.Add(newImport);
+                DbPage.db.SaveChanges();
+                MessageBox.Show($"Успех! В аптеку {pharmacy.Name} добавлен новый импорт от {newImport.ImportDateTime}");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка!\n{ex}");
+            }
+        }
+
+        private void ComboBoxPharmacies_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ComboBoxPharmacies.SelectedItem != null) ButtonImport.IsEnabled = true;
+            else ButtonImport.IsEnabled = false;
         }
     }
 }

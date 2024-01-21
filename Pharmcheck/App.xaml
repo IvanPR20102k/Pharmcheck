@@ -8,6 +8,72 @@
         <Style x:Key="Light">
             <Setter Property="CheckBox.Background" Value="LightGray"/>
         </Style>
+
+        <Style TargetType="DataGrid">
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+        </Style>
+
+        <DataTemplate x:Key="Pharmacies">
+            <Border BorderThickness="1" BorderBrush="Black">
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="{Binding Name}"/>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+
+        <DataTemplate x:Key="Imports">
+            <Border BorderThickness="1" BorderBrush="Black">
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="{Binding ID}" Margin="5"/>
+                    <TextBlock Text="{Binding ImportDateTime}" Margin="5"/>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+
+        <DataTemplate x:Key="Products">
+            <Border BorderThickness="1" BorderBrush="Black">
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel Margin="5">
+                        <TextBlock Text="{Binding Name}" Margin="5"/>
+                        <StackPanel Orientation="Horizontal" Margin="5">
+                            <TextBlock Text="ID: "/>
+                            <TextBlock Text="{Binding ShopID}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+
+        <DataTemplate x:Key="Comparisons">
+            <Border BorderThickness="1" BorderBrush="Black">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding ComparisonDateTime}" Margin="5"/>
+                    <TextBlock Text="{Binding Price}" Margin="5"/>
+                    <TextBlock Text="{Binding ShopsAmount}" Margin="5"/>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ParsingResults">
+            <Border BorderThickness="1" BorderBrush="Black">
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel Margin="5">
+                        <TextBlock Text="{Binding Name}" Margin="5"/>
+                        <StackPanel Orientation="Horizontal" Margin="5">
+                            <TextBlock Text="ID: "/>
+                            <TextBlock Text="{Binding ShopID}"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <TextBlock Text="{Binding Status}" Margin="5"/>
+                    <TextBlock Text="{Binding Path=Product.PriceMin}" Margin="5"/>
+                    <TextBlock Text="{Binding Price}" Margin="5"/>
+                    <TextBlock Text="{Binding Path=Product.PriceMax}" Margin="5"/>
+                    <TextBlock Text="{Binding ShopsAmount}" Margin="5"/>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
         
     </Application.Resources>
 </Application>

@@ -20,8 +20,8 @@ namespace Pharmcheck
     public partial class MainWindow : Window
     {
         readonly DbPage dbPage = new();
-        readonly ParsingPage parsingPage = new();
-        readonly ImportPage importPage = new();
+        ParsingPage? parsingPage;
+        ImportPage? importPage;
         public MainWindow()
         {
             InitializeComponent();
@@ -45,6 +45,7 @@ namespace Pharmcheck
             CheckBoxParsing.IsEnabled = false;
             CheckBoxImport.IsChecked = false;
             CheckBoxImport.IsEnabled = true;
+            parsingPage ??= new ParsingPage();
             MainFrame.Navigate(parsingPage);
         }
 
@@ -55,6 +56,7 @@ namespace Pharmcheck
             CheckBoxParsing.IsChecked = false;
             CheckBoxParsing.IsEnabled = true;
             CheckBoxImport.IsEnabled = false;
+            importPage ??= new ImportPage();
             MainFrame.Navigate(importPage);
         }
 

@@ -4,11 +4,30 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Pharmcheck.Pages"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      mc:Ignorable="d"
+      d:DesignHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}"
+      d:DesignWidth="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Width}"
       Title="ParsingPage">
 
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel>
+            <ComboBox x:Name="ComboBoxPharmacies" DisplayMemberPath="Name" Margin="5" SelectionChanged="ComboBoxPharmacies_SelectionChanged"/>
+            <Button x:Name="ButtonStart" Content="Запуск" Margin="5" Click="ButtonStart_Click"/>
+        </StackPanel>
+
+        <DataGrid x:Name="DataGridResults" Grid.Column="1" Margin="5">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn CellTemplate="{StaticResource ParsingResults}" Width="*"></DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Page>

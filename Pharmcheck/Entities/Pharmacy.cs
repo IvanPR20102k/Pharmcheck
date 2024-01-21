@@ -11,6 +11,6 @@ namespace Pharmcheck.Entities
         public int ID { get; set; }
         public string Name { get; set; } = null!;
 
-        public List<Import> Imports { get; } = [];
+        public List<Import>? Imports { get; } = [];
     }
 }

@@ -9,12 +9,13 @@ namespace Pharmcheck.Entities
     public class Comparison
     {
         public int ID { get; set; }
-        public DateTime DateTime { get; set; }
-        public decimal Price { get; set; }
-        public bool IsOutOfBounds { get; set; }
+        public string ComparisonDateTime { get; set; } = null!;
+        public int Status { get; set; }
+        public float Price { get; set; }
+        public int IsOutOfBounds { get; set; }
         public int ShopsAmount { get; set; }
 
-        public required int ProductID { get; set; }
-        public required Product Product { get; set; }
+        public int ProductID { get; set; }
+        public Product Product { get; set; } = null!;
     }
 }
