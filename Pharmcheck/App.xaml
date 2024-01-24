@@ -50,7 +50,10 @@
             <Border BorderThickness="1" BorderBrush="Black">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding ComparisonDateTime}" Margin="5"/>
+                    <TextBlock Text="{Binding Path=Product.PriceMin}" Margin="5"/>
                     <TextBlock Text="{Binding Price}" Margin="5"/>
+                    <TextBlock Text="{Binding Path=Product.PriceMax}" Margin="5"/>
+                    <TextBlock Text="{Binding IsOutOfBounds}" Margin="5"/>
                     <TextBlock Text="{Binding ShopsAmount}" Margin="5"/>
                 </StackPanel>
             </Border>
@@ -60,10 +63,10 @@
             <Border BorderThickness="1" BorderBrush="Black">
                 <StackPanel Orientation="Horizontal">
                     <StackPanel Margin="5">
-                        <TextBlock Text="{Binding Name}" Margin="5"/>
+                        <TextBlock Text="{Binding Path=Product.Name}" Margin="5"/>
                         <StackPanel Orientation="Horizontal" Margin="5">
                             <TextBlock Text="ID: "/>
-                            <TextBlock Text="{Binding ShopID}"/>
+                            <TextBlock Text="{Binding Path=Product.ShopID}"/>
                         </StackPanel>
                     </StackPanel>
                     <TextBlock Text="{Binding Status}" Margin="5"/>

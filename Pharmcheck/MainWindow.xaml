@@ -22,7 +22,9 @@
             <CheckBox x:Name="CheckBoxImport" Content="Импорт" Margin="5,0,5,0" Style="{DynamicResource Light}" Checked="CheckBoxImport_Checked"/>
         </ToolBar>
 
-        <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" Grid.Row="1"/>
+        <ScrollViewer Grid.Row="1">
+            <Frame ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True" x:Name="MainFrame" NavigationUIVisibility="Hidden" Grid.Row="1" />
+        </ScrollViewer>
 
     </Grid>
 </Window>

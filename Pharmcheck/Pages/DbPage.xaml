@@ -5,66 +5,64 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Pharmcheck.Pages"
       mc:Ignorable="d"
-      d:DesignHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}"
-      d:DesignWidth="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Width}"
+      d:DesignHeight="1080"
+      d:DesignWidth="1920"
       Title="DbPage" Loaded="Page_Loaded">
 
-    <ScrollViewer>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="30"/>
-            </Grid.RowDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <TextBlock Text="Аптеки | Поиск:" Margin="5"/>
-                <TextBox x:Name="TextBoxPharmacySearch" Width="200" Margin="5"/>
-            </StackPanel>
-            <DataGrid x:Name="DataGridPharmacies" Grid.Row="1" Margin="5" SelectionChanged="DataGridPharmacies_SelectionChanged">
-                <DataGrid.Columns>
-                    <DataGridTemplateColumn CellTemplate="{StaticResource Pharmacies}" Width="*"></DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <TextBlock Text="Аптеки | Поиск:" Margin="5"/>
+            <TextBox x:Name="TextBoxPharmacySearch" Width="200" Margin="5"/>
+        </StackPanel>
+        <DataGrid x:Name="DataGridPharmacies" Grid.Row="1" Margin="5" SelectionChanged="DataGridPharmacies_SelectionChanged">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn CellTemplate="{StaticResource Pharmacies}" Width="*"></DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
 
-            <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
-                <TextBlock x:Name="TextBlockPharmacy" Text="[Pharmacy] | Поиск:" Margin="5"/>
-                <TextBox x:Name="TextBoxImportSearch" Width="200" Margin="5"/>
-            </StackPanel>
-            <DataGrid x:Name="DataGridImports" Grid.Row="3" Margin="5" SelectionChanged="DataGridImports_SelectionChanged">
-                <DataGrid.Columns>
-                    <DataGridTemplateColumn CellTemplate="{StaticResource Imports}" Width="*"></DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
+            <TextBlock x:Name="TextBlockPharmacy" Text="[Pharmacy] | Поиск:" Margin="5"/>
+            <TextBox x:Name="TextBoxImportSearch" Width="200" Margin="5"/>
+        </StackPanel>
+        <DataGrid x:Name="DataGridImports" Grid.Row="3" Margin="5" SelectionChanged="DataGridImports_SelectionChanged">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn CellTemplate="{StaticResource Imports}" Width="*"></DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button x:Name="ButtonExportTest" Content="Экспорт" Grid.Row="5" Margin="5" Click="ButtonExportTest_Click"/>
 
-            <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
-                <TextBlock x:Name="TextBlockImport" Text="Импорт от [ImportDateTime] | Поиск:" Margin="5"/>
-                <TextBox x:Name="TextBoxProductsSearch" Width="400" Margin="5"/>
-            </StackPanel>
-            <DataGrid x:Name="DataGridProducts" Grid.Column="1" Grid.Row="1" Grid.RowSpan="3" Margin="5">
-                <DataGrid.Columns>
-                    <DataGridTemplateColumn CellTemplate="{StaticResource Products}" Width="*"></DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
+        <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
+            <TextBlock x:Name="TextBlockImport" Text="Импорт от [ImportDateTime] | Поиск:" Margin="5"/>
+            <TextBox x:Name="TextBoxProductsSearch" Width="400" Margin="5"/>
+        </StackPanel>
+        <DataGrid x:Name="DataGridProducts" Grid.Column="1" Grid.Row="1" Grid.RowSpan="3" Margin="5" SelectionChanged="DataGridProducts_SelectionChanged">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn CellTemplate="{StaticResource Products}" Width="*"></DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
 
-            <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
-                <TextBlock Text="Сравнения | Поиск:" Margin="5"/>
-                <TextBox x:Name="TextBoxComparisonsSearch" Width="250" Margin="5"/>
-            </StackPanel>
-            <DataGrid x:Name="DataGridComparisons" Grid.Column="2" Grid.Row="1" Grid.RowSpan="3" Margin="5">
-                <DataGrid.Columns>
-                    <DataGridTemplateColumn CellTemplate="{StaticResource Comparisons}" Width="*"></DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
-            
-        </Grid>
-    </ScrollViewer>
+        <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
+            <TextBlock Text="Сравнения | Поиск:" Margin="5"/>
+            <TextBox x:Name="TextBoxComparisonsSearch" Width="250" Margin="5"/>
+        </StackPanel>
+        <DataGrid x:Name="DataGridComparisons" Grid.Column="2" Grid.Row="1" Grid.RowSpan="3" Margin="5">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn CellTemplate="{StaticResource Comparisons}" Width="*"></DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
 </Page>
