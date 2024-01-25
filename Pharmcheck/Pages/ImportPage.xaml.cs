@@ -33,7 +33,7 @@ namespace Pharmcheck.Pages
         public ImportPage()
         {
             InitializeComponent();
-            ComboBoxPharmacies.ItemsSource = DbPage.db.Pharmacies.ToList();
+            ComboBoxPharmacies.ItemsSource = Helper.GetDb().Pharmacies.ToList();
         }
 
         private void ButtonOpen_Click(object sender, RoutedEventArgs e)
@@ -76,13 +76,14 @@ namespace Pharmcheck.Pages
         {
             try
             {
-                if (ComboBoxPharmacies.SelectedItem is not Pharmacy pharmacy) { return; }
+                if (ComboBoxPharmacies.SelectedItem is not Pharmacy selectedPharmacy) { return; }
+                selectedPharmacy = Helper.GetDb().Pharmacies.Where(p => p.ID == selectedPharmacy.ID).First();
                 Import newImport = new()
                 {
-                    PharmacyID = pharmacy.ID,
+                    PharmacyID = selectedPharmacy.ID,
                     ImportDateTime = File.GetCreationTime(filePath).ToString(),
                 };
-                DbPage.db.Update(pharmacy);
+                Helper.GetDb().Update(selectedPharmacy);
                 foreach (var rawProduct in outputRows)
                 {
                     Product newProduct = new()
@@ -94,9 +95,9 @@ namespace Pharmcheck.Pages
                     };
                     newImport.Products.Add(newProduct);
                 }
-                pharmacy.Imports.Add(newImport);
-                DbPage.db.SaveChanges();
-                MessageBox.Show($"Успех! В аптеку {pharmacy.Name} добавлен новый импорт от {newImport.ImportDateTime}");
+                selectedPharmacy.Imports.Add(newImport);
+                Helper.GetDb().SaveChanges();
+                MessageBox.Show($"Успех! В аптеку {selectedPharmacy.Name} добавлен новый импорт от {newImport.ImportDateTime}");
             }
             catch (Exception ex)
             {
@@ -106,7 +107,7 @@ namespace Pharmcheck.Pages
 
         private void ComboBoxPharmacies_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ComboBoxPharmacies.SelectedItem != null) ButtonImport.IsEnabled = true;
+            if (ComboBoxPharmacies.SelectedItem != null || ComboBoxPharmacies.SelectedIndex != -1) ButtonImport.IsEnabled = true;
             else ButtonImport.IsEnabled = false;
         }
     }

@@ -62,21 +62,26 @@
         <DataTemplate x:Key="ParsingResults">
             <Border BorderThickness="1" BorderBrush="Black">
                 <StackPanel Orientation="Horizontal">
-                    <StackPanel Margin="5">
+                    <StackPanel Margin="5" VerticalAlignment="Center">
                         <TextBlock Text="{Binding Path=Product.Name}" Margin="5"/>
                         <StackPanel Orientation="Horizontal" Margin="5">
                             <TextBlock Text="ID: "/>
                             <TextBlock Text="{Binding Path=Product.ShopID}"/>
                         </StackPanel>
                     </StackPanel>
-                    <TextBlock Text="{Binding Status}" Margin="5"/>
-                    <TextBlock Text="{Binding Path=Product.PriceMin}" Margin="5"/>
-                    <TextBlock Text="{Binding Price}" Margin="5"/>
-                    <TextBlock Text="{Binding Path=Product.PriceMax}" Margin="5"/>
-                    <TextBlock Text="{Binding ShopsAmount}" Margin="5"/>
+                    <TextBlock Text="Статус: " Margin="5,5,0,5"/>
+                    <TextBlock Text="{Binding Status}" Margin="0,5,5,5"/>
+                    <TextBlock Text="PriceMin: " Margin="5,5,0,5"/>
+                    <TextBlock Text="{Binding Path=Product.PriceMin}" Margin="0,5,5,5"/>
+                    <TextBlock Text="Цена: " Margin="5,5,0,5"/>
+                    <TextBlock Text="{Binding Price}" Margin="0,5,5,5"/>
+                    <TextBlock Text="PriceMax: " Margin="5,5,0,5"/>
+                    <TextBlock Text="{Binding Path=Product.PriceMax}" Margin="0,5,5,5"/>
+                    <TextBlock Text="Кол-во магазинов: " Margin="5,5,0,5"/>
+                    <TextBlock Text="{Binding ShopsAmount}" Margin="0,5,5,5"/>
                 </StackPanel>
             </Border>
         </DataTemplate>
-        
+
     </Application.Resources>
 </Application>

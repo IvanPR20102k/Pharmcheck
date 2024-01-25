@@ -28,7 +28,16 @@ namespace Pharmcheck.Pages
     /// </summary>
     public partial class DbPage : Page
     {
-        public static ApplicationContext db = new();
+        int pharmacyId = 0;
+        int pharmacyIndex = 0;
+        string pharmacySearch = string.Empty;
+        int importId = 0;
+        int importIndex = 0;
+        string importSearch = string.Empty;
+        int productId = 0;
+        int productIndex = 0;
+        string productSearch = string.Empty;
+        string comparisonSearch = string.Empty;
         public DbPage()
         {
             InitializeComponent();
@@ -36,68 +45,47 @@ namespace Pharmcheck.Pages
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            db.Database.EnsureCreated();
+            Helper.GetDb().Database.EnsureCreated();
 
-            if (db.Pharmacies.FirstOrDefault() ==  null)
+            if (Helper.GetDb().Pharmacies.FirstOrDefault() ==  null)
             {
                 List<string> titles = ["Аптека легко"];
                 foreach (string title in titles)
                 {
-                    db.Add(new Pharmacy { Name = title });
+                    Helper.GetDb().Add(new Pharmacy { Name = title });
                 }
-                db.SaveChanges();
+                Helper.GetDb().SaveChanges();
             }
 
-            DataGridPharmacies.ItemsSource = db.Pharmacies.ToList();
+            DataGridPharmacies.ItemsSource = Helper.GetDb().Pharmacies.ToList();
             DataGridPharmacies.Items.Refresh();
-        }
-
-        private void DataGridPharmacies_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (DataGridPharmacies.SelectedItem is not Pharmacy selectedPharmacy) { return; }
-            TextBlockPharmacy.Text = $"{selectedPharmacy.Name} | Поиск:";
-            DataGridImports.ItemsSource = db.Imports.Where(Import => Import.PharmacyID == selectedPharmacy.ID).ToList();
-            DataGridImports.Items.Refresh();
-        }
-
-        private void DataGridImports_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (DataGridImports.SelectedItem is not Import selectedImport) { return; }
-            TextBlockImport.Text = $"Импорт от {selectedImport.ImportDateTime} | Поиск:";
-            DataGridProducts.ItemsSource = db.Products.Where(Product => Product.ImportID == selectedImport.ID).ToList();
-            DataGridProducts.Items.Refresh();
-        }
-
-        private void DataGridProducts_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (DataGridProducts.SelectedItem is not Product selectedProduct) { return; }
-            DataGridComparisons.ItemsSource = db.Comparisons.Where(Comparison => Comparison.ProductID == selectedProduct.ID).ToList();
-            DataGridComparisons.Items.Refresh();
         }
 
         private void ButtonExportTest_Click(object sender, RoutedEventArgs e)
         {
-            if (DataGridImports.SelectedItem is not Import selectedImport) { return; }
+            if (DataGridImports.SelectedItem is not Import import) { return; }
             List<ProductExport> outputRecords = [];
-            foreach (Product product in selectedImport.Products)
+            foreach (Product product in import.Products)
             {
+                Comparison lastComparison = Helper.GetDb().Comparisons.Where(c => c.ProductID == product.ID).First();
                 ProductExport export = new()
                 {
                     ProductID = product.ShopID,
                     ProductName = product.Name,
                     PriceMin = product.PriceMin,
-                    PriceReal = product.Comparisons.First().Price,
+                    PriceReal = lastComparison.Price,
                     PriceMax = product.PriceMax,
-                    ComparisonDateTime = product.Comparisons.First().ComparisonDateTime,
-                    IsOutOfBounds = product.Comparisons.First().IsOutOfBounds,
-                    Shops = product.Comparisons.First().ShopsAmount
+                    ComparisonDateTime = lastComparison.ComparisonDateTime,
+                    IsOutOfBounds = lastComparison.IsOutOfBounds,
+                    Shops = lastComparison.ShopsAmount
                 };
                 outputRecords.Add(export);
             }
             string date = DateTime.Now.ToShortDateString();
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            using var writer = new StreamWriter(new FileStream($"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\ParserOutput{date}.csv", FileMode.OpenOrCreate, FileAccess.ReadWrite), Encoding.GetEncoding(1251));
-            //using var writer = new StreamWriter($"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\ParserOutput{date}.csv");
+            string name = import.Pharmacy.Name;
+            string path = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\{name}_{date}.csv";
+            using var writer = new StreamWriter(new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite), Encoding.GetEncoding(1251));
             var config = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
                 Delimiter = ";",
@@ -105,6 +93,8 @@ namespace Pharmcheck.Pages
             using var csvWriter = new CsvWriter(writer, config);
 
             csvWriter.WriteRecords(outputRecords);
+
+            MessageBox.Show($"Успех! Файл с именем {name}_{date} успешно создан.");
         }
 
         private class ProductExport
@@ -118,6 +108,76 @@ namespace Pharmcheck.Pages
             public int IsOutOfBounds { get; set;}
             public int Shops { get; set;}
 
+        }
+
+        private void DataGridPharmacies_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            pharmacyIndex = DataGridPharmacies.SelectedIndex;
+            Pharmacy selectedPharmacy = (Pharmacy)DataGridPharmacies.SelectedItem;
+            if (selectedPharmacy == null) { return; }
+            pharmacyId = selectedPharmacy.ID;
+            TextBlockPharmacy.Text = selectedPharmacy.Name;
+            Refresh();
+        }
+        private void DataGridImports_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            importIndex = DataGridImports.SelectedIndex;
+            Import selectedImport = (Import)DataGridImports.SelectedItem;
+            if (selectedImport == null) { return; }
+            importId = selectedImport.ID;
+            TextBlockImport.Text = $"Импорт {selectedImport.ID} от {selectedImport.ImportDateTime}";
+            Refresh();
+        }
+        private void DataGridProducts_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            productIndex = DataGridProducts.SelectedIndex;
+            Product selectedProduct = (Product)DataGridProducts.SelectedItem;
+            if (selectedProduct == null) { return; }
+            productId = selectedProduct.ID;
+            Refresh();
+        }
+        private void DataGridPharmacies_TouchDown(object sender, TouchEventArgs e)
+        {
+            Refresh();
+        }
+        private void DataGridImports_TouchDown(object sender, TouchEventArgs e)
+        {
+            Refresh();
+        }
+        private void DataGridProducts_TouchDown(object sender, TouchEventArgs e)
+        {
+            Refresh();
+        }
+        private void Refresh()
+        {
+            DataGridPharmacies.ItemsSource = Helper.GetDb().Pharmacies.Where(p => p.Name.Contains(pharmacySearch)).ToList();
+            DataGridImports.ItemsSource = Helper.GetDb().Imports.Where(i => i.PharmacyID == pharmacyId)
+                .Where(i => i.ImportDateTime.Contains(importSearch)).ToList();
+            DataGridProducts.ItemsSource = Helper.GetDb().Products.Where(p => p.ImportID == importId)
+                .Where(p => p.ShopID.Contains(productSearch) || p.Name.Contains(productSearch)).ToList();
+            DataGridComparisons.ItemsSource = Helper.GetDb().Comparisons.Where(c => c.ProductID == productId)
+                .Where(c => c.ComparisonDateTime.Contains(comparisonSearch)).ToList();
+        }
+
+        private void TextBoxPharmacySearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            pharmacySearch = TextBoxPharmacySearch.Text;
+            Refresh();
+        }
+        private void TextBoxImportSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            importSearch = TextBoxImportSearch.Text;
+            Refresh();
+        }
+        private void TextBoxProductsSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            productSearch = TextBoxProductsSearch.Text;
+            Refresh();
+        }
+        private void TextBoxComparisonsSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            comparisonSearch = TextBoxComparisonsSearch.Text;
+            Refresh();
         }
     }
 }

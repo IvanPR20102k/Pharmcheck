@@ -27,7 +27,7 @@ namespace Pharmcheck.Pages
         public ParsingPage()
         {
             InitializeComponent();
-            ComboBoxPharmacies.ItemsSource = DbPage.db.Pharmacies.ToList();
+            ComboBoxPharmacies.ItemsSource = Helper.GetDb().Pharmacies.ToList();
         }
 
         private void ComboBoxPharmacies_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -41,12 +41,13 @@ namespace Pharmcheck.Pages
             try
             {
                 if (ComboBoxPharmacies.SelectedItem is not Pharmacy pharmacy) { return; }
-                List<Product> queue = pharmacy.Imports.First().Products;
+                List<int> queue = Helper.GetDb().Imports.Where(i => i.PharmacyID == pharmacy.ID).OrderBy(i => i.ID).Last().Products.Select(p => p.ID).ToList();
                 switch (pharmacy.Name)
                 {
                     case "Аптека легко":
-                        foreach (var product in queue)
+                        foreach (int id in queue)
                         {
+                            Product product = Helper.GetDb().Products.Where(p => p.ID == id).Single();
                             string productLink = $"https://aptekalegko.ru/product/{product.ShopID}";
                             var productPage = await Aptekalegko.GetPage(productLink);
                             float price = Aptekalegko.GetPrice(productPage);
@@ -65,8 +66,9 @@ namespace Pharmcheck.Pages
                                 ShopsAmount = shops,
                             };
                             product.Comparisons.Add(newComparison);
-                            DbPage.db.SaveChanges();
-                            resultsList.Add(DbPage.db.Comparisons.Where(Comparison => Comparison.ProductID == product.ID).First());
+                            Helper.GetDb().SaveChanges();
+                            resultsList.Add(newComparison);
+                            //resultsList.Add(Helper.GetDb().Comparisons.Where(c => c.ProductID == product.ID).OrderBy(c => c.ID).Last());
                             DataGridResults.ItemsSource = resultsList;
                             DataGridResults.Items.Refresh();
                             await Task.Run(() => Thread.Sleep(5000));

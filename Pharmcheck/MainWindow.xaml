@@ -5,9 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pharmcheck"
         mc:Ignorable="d"
-        Title="Pharmcheck" 
-        Height="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}" 
-        Width="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Width}" Loaded="Window_Loaded">
+        Title="Pharmcheck"
+        Width="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Width}"
+        MinWidth="1024"
+        Height="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}"
+        MinHeight="576"
+        Loaded="Window_Loaded">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -22,9 +25,7 @@
             <CheckBox x:Name="CheckBoxImport" Content="Импорт" Margin="5,0,5,0" Style="{DynamicResource Light}" Checked="CheckBoxImport_Checked"/>
         </ToolBar>
 
-        <ScrollViewer Grid.Row="1">
-            <Frame ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True" x:Name="MainFrame" NavigationUIVisibility="Hidden" Grid.Row="1" />
-        </ScrollViewer>
+        <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" Grid.Row="1" />
 
     </Grid>
 </Window>

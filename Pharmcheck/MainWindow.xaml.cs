@@ -65,16 +65,13 @@ namespace Pharmcheck
         }
     }
 
-    //public class Helper
-    //{
-    //    public static ApplicationContext? db;
-    //    public static ApplicationContext GetContext()
-    //    {
-    //        if (db == null)
-    //        {
-    //            db = new ApplicationContext();
-    //        }
-    //        return db;
-    //    }
-    //}
+    public class Helper
+    {
+        public static ApplicationContext? db;
+        public static ApplicationContext GetDb()
+        {
+            db ??= new ApplicationContext();
+            return db;
+        }
+    }
 }
