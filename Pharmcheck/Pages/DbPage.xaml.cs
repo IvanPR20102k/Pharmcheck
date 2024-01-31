@@ -20,6 +20,7 @@ using System.IO;
 using System.Globalization;
 using CsvHelper.Configuration;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.EntityFrameworkCore;
 
 namespace Pharmcheck.Pages
 {
@@ -46,6 +47,10 @@ namespace Pharmcheck.Pages
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             Helper.GetDb().Database.EnsureCreated();
+            Helper.GetDb().Pharmacies.Load();
+            Helper.GetDb().Imports.Load();
+            Helper.GetDb().Products.Load();
+            Helper.GetDb().Comparisons.Load();
 
             if (Helper.GetDb().Pharmacies.FirstOrDefault() ==  null)
             {
@@ -67,7 +72,7 @@ namespace Pharmcheck.Pages
             List<ProductExport> outputRecords = [];
             foreach (Product product in import.Products)
             {
-                Comparison lastComparison = Helper.GetDb().Comparisons.Where(c => c.ProductID == product.ID).First();
+                Comparison lastComparison = Helper.GetDb().Comparisons.Where(c => c.ProductID == product.ID).OrderBy(c => c.ComparisonDateTime).Last();
                 ProductExport export = new()
                 {
                     ProductID = product.ShopID,

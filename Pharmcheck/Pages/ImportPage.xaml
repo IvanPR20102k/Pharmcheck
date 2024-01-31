@@ -6,9 +6,7 @@
       xmlns:local="clr-namespace:Pharmcheck.Pages"
       mc:Ignorable="d"
       d:DesignHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}"
-        MinWidth="1024"
       d:DesignWidth="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Width}"
-        MinHeight="576"
       Title="ImportPage">
 
     <Grid>

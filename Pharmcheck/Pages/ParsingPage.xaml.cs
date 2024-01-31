@@ -51,8 +51,7 @@ namespace Pharmcheck.Pages
                             string productLink = $"https://aptekalegko.ru/product/{product.ShopID}";
                             var productPage = await Aptekalegko.GetPage(productLink);
                             float price = Aptekalegko.GetPrice(productPage);
-                            int status = 400;
-                            if (price > 0) status = 200; 
+                            int status = Aptekalegko.GetStatus(productPage);
                             int flag;
                             if (price > product.PriceMax || price < product.PriceMin) flag = 1;
                             else flag = 0;
@@ -71,7 +70,7 @@ namespace Pharmcheck.Pages
                             //resultsList.Add(Helper.GetDb().Comparisons.Where(c => c.ProductID == product.ID).OrderBy(c => c.ID).Last());
                             DataGridResults.ItemsSource = resultsList;
                             DataGridResults.Items.Refresh();
-                            await Task.Run(() => Thread.Sleep(5000));
+                            await Task.Run(() => Thread.Sleep(1000));
                         }
                         break;
                 }
