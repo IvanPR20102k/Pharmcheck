@@ -9,13 +9,13 @@
       d:DesignHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}"
       HorizontalAlignment="Stretch"
       VerticalAlignment="Stretch"
-      Title="DbPage" Loaded="Page_Loaded">
+      Title="DbPage" Loaded="Page_Loaded" Initialized="Page_Initialized">
 
-    <Grid>
+    <Grid Margin="5,0,5,5">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="6*"/>
-            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition x:Name="ColumnProduct" Width="*"/>
+            <ColumnDefinition x:Name="ColumnComparison" Width="auto"/>
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
@@ -56,17 +56,20 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="30"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="3*"/>
             </Grid.RowDefinitions>
 
-            <DataGrid x:Name="DataGridPharmacies" Margin="5,0,5,5" SelectionChanged="DataGridPharmacies_SelectionChanged" TouchDown="DataGridPharmacies_TouchDown">
+            <DataGrid x:Name="DataGridPharmacies" SelectionMode="Single" IsReadOnly="True" Margin="5,0,5,5" SelectionChanged="DataGridPharmacies_SelectionChanged">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn CellTemplate="{StaticResource Pharmacies}" Width="*"></DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
 
             <DockPanel LastChildFill="True" Grid.Row="1" Margin="5,0,5,0">
-                <TextBlock x:Name="TextBlockPharmacy" Text="Выберите аптеку" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBlock x:Name="TextBlockPharmacy" Text="Выберите аптеку" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <Button x:Name="ButtonImportsRefresh" DockPanel.Dock="Right" Background="White" Height="20" Width="20" Margin="5,0,0,0" Click="ButtonImportsRefresh_Click">
+                    <Image Source="\Resources\refresh.ico" Stretch="Uniform"/>
+                </Button>
                 <TextBox x:Name="TextBoxImportSearch" VerticalAlignment="Center" Height="20" TextChanged="TextBoxImportSearch_TextChanged">
                     <TextBox.Style>
                         <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
@@ -93,17 +96,20 @@
                 </TextBox>
             </DockPanel>
 
-            <DataGrid x:Name="DataGridImports" Grid.Row="2" Margin="5,0,5,0" SelectionChanged="DataGridImports_SelectionChanged" TouchDown="DataGridImports_TouchDown">
+            <DataGrid x:Name="DataGridImports" SelectionMode="Single" IsReadOnly="True" Grid.Row="2" Margin="5,0,5,0" SelectionChanged="DataGridImports_SelectionChanged">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn CellTemplate="{StaticResource Imports}" Width="*"></DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
-            
+
         <Button x:Name="ButtonExportTest" Content="Экспорт" Grid.Row="3" Margin="5" Click="ButtonExportTest_Click"/>
 
         <DockPanel LastChildFill="True" Grid.Column="1" Margin="5,0,5,0">
-            <TextBlock x:Name="TextBlockImport" Text="Выберите импорт" VerticalAlignment="Center" Margin="5,0,5,0"/>
+            <TextBlock x:Name="TextBlockImport" Text="Выберите импорт" VerticalAlignment="Center" Margin="0,0,5,0"/>
+            <Button x:Name="ButtonProductsRefresh" DockPanel.Dock="Right" Background="White" Height="20" Width="20" Margin="5,0,0,0" Click="ButtonProductsRefresh_Click">
+                <Image Source="\Resources\refresh.ico" Stretch="Uniform"/>
+            </Button>
             <TextBox x:Name="TextBoxProductsSearch" VerticalAlignment="Center" Height="20" TextChanged="TextBoxProductsSearch_TextChanged">
                 <TextBox.Style>
                     <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
@@ -129,14 +135,26 @@
                 </TextBox.Style>
             </TextBox>
         </DockPanel>
-        <DataGrid x:Name="DataGridProducts" Grid.Column="1" Grid.Row="1" Margin="5,0,5,0" SelectionChanged="DataGridProducts_SelectionChanged" TouchDown="DataGridProducts_TouchDown">
+        <DataGrid x:Name="DataGridProducts" SelectionMode="Single" IsReadOnly="True" Grid.Column="1" Grid.Row="1" Margin="5,0,5,0" SelectionChanged="DataGridProducts_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTemplateColumn CellTemplate="{StaticResource Products}" Width="*"></DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
+        <StackPanel Background="LightGray" Orientation="Horizontal" Grid.Column="1" Grid.Row="2" Margin="5,0,5,5">
+            <StackPanel x:Name="SelectionBarProduct" Orientation="Horizontal">
+                <ToggleButton x:Name="TButtonProductAll" Content=" Все: 0 " Background="White" Style="{DynamicResource SortTButton}"/>
+                <ToggleButton x:Name="TButtonProductGray" Content=" Нет данных: 0 " Foreground="White" Background="Gray" BorderThickness="0" Style="{DynamicResource SortTButton}"/>
+                <ToggleButton x:Name="TButtonProductGreen" Content=" Соответствует: 0 " Foreground="White" Background="#00CD14" BorderThickness="0" Style="{DynamicResource SortTButton}"/>
+                <ToggleButton x:Name="TButtonProductRed" Content=" Не соответствует: 0 " Foreground="White" Background="#CD0000" BorderThickness="0" Style="{DynamicResource SortTButton}"/>
+                <ToggleButton x:Name="TButtonProductYellow" Content=" Ошибка: 0 " Background="#FFF84B" BorderThickness="0" Style="{DynamicResource SortTButton}"/>
+            </StackPanel>
+        </StackPanel>
 
         <DockPanel LastChildFill="True" Grid.Column="2" Margin="5,0,5,0">
-            <TextBlock Text="Сравнения" VerticalAlignment="Center" Margin="5,0,5,0"/>
+            <TextBlock Text="Сравнения" VerticalAlignment="Center" Margin="0,0,5,0"/>
+            <Button x:Name="ButtonComparisonsRefresh" DockPanel.Dock="Right" Background="White" Height="20" Width="20" Margin="5,0,0,0" Click="ButtonComparisonsRefresh_Click">
+                <Image Source="\Resources\refresh.ico" Stretch="Uniform"/>
+            </Button>
             <TextBox x:Name="TextBoxComparisonsSearch" VerticalAlignment="Center" Height="20" TextChanged="TextBoxComparisonsSearch_TextChanged">
                 <TextBox.Style>
                     <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
@@ -159,12 +177,31 @@
                             </Trigger>
                         </Style.Triggers>
                     </Style>
-                </TextBox.Style></TextBox>
+                </TextBox.Style>
+            </TextBox>
         </DockPanel>
-        <DataGrid x:Name="DataGridComparisons" Grid.Column="2" Grid.Row="1" Margin="5,0,5,0">
-            <DataGrid.Columns>
-                <DataGridTemplateColumn CellTemplate="{StaticResource Comparisons}" Width="*"></DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+        <DockPanel LastChildFill="True" Grid.Column="2" Grid.Row="1" Margin="5,0,5,0">
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0,0,0,5">
+                <TextBlock Text="Минимальная цена:"/>
+                <TextBlock x:Name="TextBlockMin" Margin="5,0,5,0"/>
+                <TextBlock Text="Максимальная цена:"/>
+                <TextBlock x:Name="TextBlockMax" Margin="5,0,5,0"/>
+            </StackPanel>
+            <DataGrid x:Name="DataGridComparisons" SelectionMode="Single" IsReadOnly="True" AutoGenerateColumns="False" CanUserResizeRows="False" Style="{x:Null}" >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Дата и время" Binding="{Binding ComparisonDateTime}" Width="Auto"/>
+                    <DataGridTextColumn Header="Ответ" Binding="{Binding RequestStatus}" Width="Auto"/>
+                    <DataGridTextColumn Header="Статус" Binding="{Binding ParsingStatus}" Width="Auto"/>
+                    <DataGridTextColumn Header="Цена" Binding="{Binding Price}" Width="Auto"/>
+                    <DataGridTextColumn Header="Аптеки" Binding="{Binding ShopsAmount}" Width="Auto"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+        <StackPanel x:Name="SelectionBarComparison" Background="LightGray" Orientation="Horizontal" Grid.Column="2" Grid.Row="2" Margin="5,0,5,5">
+            <ToggleButton x:Name="TButtonComparisonAll" Content=" Все: 0 " Background="White" Style="{DynamicResource SortTButton}"/>
+            <ToggleButton x:Name="TButtonComparisonGreen" Content=" Соответствует: 0 " Foreground="White" Background="#00CD14" BorderThickness="0" Style="{DynamicResource SortTButton}"/>
+            <ToggleButton x:Name="TButtonComparisonRed" Content=" Не соответствует: 0 " Foreground="White" Background="#CD0000" BorderThickness="0" Style="{DynamicResource SortTButton}"/>
+            <ToggleButton x:Name="TButtonComparisonYellow" Content=" Ошибка: 0 " Background="#FFF84B" BorderThickness="0" Style="{DynamicResource SortTButton}"/>
+        </StackPanel>
     </Grid>
 </Page>

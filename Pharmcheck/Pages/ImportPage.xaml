@@ -9,13 +9,13 @@
       d:DesignWidth="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Width}"
       Title="ImportPage">
 
-    <Grid>
+    <Grid Margin="5,0,5,5">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="200"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
@@ -26,7 +26,7 @@
             <Button x:Name="ButtonImport" Content="Импортировать" IsEnabled="False" Margin="5" Click="ButtonImport_Click"/>
         </StackPanel>
 
-        <DataGrid x:Name="DataGridPreview" Style="{x:Null}" Grid.Column="1" Margin="5,5,5,0"/>
+        <DataGrid x:Name="DataGridPreview" SelectionMode="Single" IsReadOnly="True" Style="{x:Null}" Grid.Column="1" Margin="5,5,5,0"/>
         <StackPanel Background="LightGray" Grid.Column="1" Grid.Row="1" Margin="5,0,5,5">
             
         </StackPanel>

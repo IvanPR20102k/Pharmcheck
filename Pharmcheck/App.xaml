@@ -9,6 +9,13 @@
             <Setter Property="CheckBox.Background" Value="LightGray"/>
         </Style>
 
+        <Style x:Key="SortTButton" TargetType="ToggleButton">
+            <Setter Property="MinWidth" Value="20"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Margin" Value="2.5"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+        </Style>
+
         <Style TargetType="DataGrid">
             <Setter Property="AutoGenerateColumns" Value="False"/>
             <Setter Property="IsReadOnly" Value="True"/>
@@ -47,18 +54,18 @@
             </Border>
         </DataTemplate>
 
-        <DataTemplate x:Key="Comparisons">
+        <!--<DataTemplate x:Key="Comparisons">
             <Border BorderThickness="1" BorderBrush="Black">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding ComparisonDateTime}" Margin="5"/>
                     <TextBlock Text="{Binding Path=Product.PriceMin}" Margin="5"/>
-                    <TextBlock Text="{Binding Price}" Margin="5"/>
+                    <TextBlock x:Name="ComparisonPrice" Text="{Binding Price}" Margin="5"/>
                     <TextBlock Text="{Binding Path=Product.PriceMax}" Margin="5"/>
                     <TextBlock Text="{Binding IsOutOfBounds}" Margin="5"/>
                     <TextBlock Text="{Binding ShopsAmount}" Margin="5"/>
                 </StackPanel>
             </Border>
-        </DataTemplate>
+        </DataTemplate>-->
 
         <DataTemplate x:Key="ParsingResults">
             <Border BorderThickness="1" BorderBrush="Black">
@@ -70,13 +77,15 @@
                             <TextBlock Text="{Binding Path=Product.ShopID}"/>
                         </StackPanel>
                     </StackPanel>
+                    <TextBlock Text="Ответ: " Margin="5,5,0,5"/>
+                    <TextBlock Text="{Binding RequestStatus}" Margin="0,5,5,5"/>
                     <TextBlock Text="Статус: " Margin="5,5,0,5"/>
-                    <TextBlock Text="{Binding Status}" Margin="0,5,5,5"/>
-                    <TextBlock Text="PriceMin: " Margin="5,5,0,5"/>
+                    <TextBlock Text="{Binding ParsingStatus}" Margin="0,5,5,5"/>
+                    <TextBlock Text="Минимальная цена: " Margin="5,5,0,5"/>
                     <TextBlock Text="{Binding Path=Product.PriceMin}" Margin="0,5,5,5"/>
                     <TextBlock Text="Цена: " Margin="5,5,0,5"/>
                     <TextBlock Text="{Binding Price}" Margin="0,5,5,5"/>
-                    <TextBlock Text="PriceMax: " Margin="5,5,0,5"/>
+                    <TextBlock Text="Максимальная цена: " Margin="5,5,0,5"/>
                     <TextBlock Text="{Binding Path=Product.PriceMax}" Margin="0,5,5,5"/>
                     <TextBlock Text="Кол-во магазинов: " Margin="5,5,0,5"/>
                     <TextBlock Text="{Binding ShopsAmount}" Margin="0,5,5,5"/>

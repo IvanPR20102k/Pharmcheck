@@ -30,6 +30,7 @@ namespace Pharmcheck.Pages
         public string fileContent = string.Empty;
         public string filePath = string.Empty;
         private List<ProductImport> outputRows = [];
+
         public ImportPage()
         {
             InitializeComponent();
@@ -56,6 +57,7 @@ namespace Pharmcheck.Pages
                     using var csv = new CsvReader(reader, config);
                     outputRows = csv.GetRecords<ProductImport>().ToList();
                 }
+                else return;
                 DataGridPreview.ItemsSource = outputRows;
             }
             catch (Exception exception)
@@ -64,7 +66,7 @@ namespace Pharmcheck.Pages
             }
         }
 
-        public class ProductImport
+        private class ProductImport
         {
             public string ProductID { get; set; } = null!;
             public string ProductName { get; set; } = null!;
@@ -91,7 +93,8 @@ namespace Pharmcheck.Pages
                         ShopID = rawProduct.ProductID,
                         Name = rawProduct.ProductName,
                         PriceMin = Convert.ToSingle(rawProduct.PriceMin) / 100,
-                        PriceMax = Convert.ToSingle(rawProduct.PriceMax) / 100
+                        PriceMax = Convert.ToSingle(rawProduct.PriceMax) / 100,
+                        Status = 0
                     };
                     newImport.Products.Add(newProduct);
                 }

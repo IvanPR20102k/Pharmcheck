@@ -33,7 +33,7 @@ namespace Pharmcheck.Parsers
             return page;
         }
 
-        public static int GetStatus(IHtmlDocument page)
+        public static int GetRequestStatus(IHtmlDocument page)
         {
             var statusCode = page.StatusCode;
             int status = Convert.ToInt32(statusCode);

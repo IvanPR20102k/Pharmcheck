@@ -23,7 +23,7 @@ namespace Pharmcheck.Pages
     /// </summary>
     public partial class ParsingPage : Page
     {
-        List<Comparison> resultsList = new();
+        List<Comparison> resultsList = [];
         public ParsingPage()
         {
             InitializeComponent();
@@ -41,6 +41,7 @@ namespace Pharmcheck.Pages
             try
             {
                 if (ComboBoxPharmacies.SelectedItem is not Pharmacy pharmacy) { return; }
+                //Создание очереди для парсинга
                 List<int> queue = Helper.GetDb().Imports.Where(i => i.PharmacyID == pharmacy.ID).OrderBy(i => i.ID).Last().Products.Select(p => p.ID).ToList();
                 switch (pharmacy.Name)
                 {
@@ -51,23 +52,27 @@ namespace Pharmcheck.Pages
                             string productLink = $"https://aptekalegko.ru/product/{product.ShopID}";
                             var productPage = await Aptekalegko.GetPage(productLink);
                             float price = Aptekalegko.GetPrice(productPage);
-                            int status = Aptekalegko.GetStatus(productPage);
-                            int flag;
-                            if (price > product.PriceMax || price < product.PriceMin) flag = 1;
-                            else flag = 0;
+
+                            int requestStatus = Aptekalegko.GetRequestStatus(productPage);
+
                             int shops = Aptekalegko.GetShops(productPage);
+
+                            byte parsingStatus;
+                            if (price > product.PriceMin && price < product.PriceMax) parsingStatus = 1;
+                            else parsingStatus = 2;
+
                             Comparison newComparison = new()
                             {
-                                Status = status,
+                                RequestStatus = requestStatus,
                                 ComparisonDateTime = DateTime.Now.ToString(),
                                 Price = price,
-                                IsOutOfBounds = flag,
                                 ShopsAmount = shops,
+                                ParsingStatus = parsingStatus
                             };
                             product.Comparisons.Add(newComparison);
+                            product.Status = parsingStatus;
                             Helper.GetDb().SaveChanges();
                             resultsList.Add(newComparison);
-                            //resultsList.Add(Helper.GetDb().Comparisons.Where(c => c.ProductID == product.ID).OrderBy(c => c.ID).Last());
                             DataGridResults.ItemsSource = resultsList;
                             DataGridResults.Items.Refresh();
                             await Task.Run(() => Thread.Sleep(1000));
@@ -79,6 +84,12 @@ namespace Pharmcheck.Pages
             {
                 MessageBox.Show(ex.ToString());
             }
+        }
+
+        private void ButtonClear_Click(object sender, RoutedEventArgs e)
+        {
+            resultsList.Clear();
+            DataGridResults.Items.Refresh();
         }
     }
 }

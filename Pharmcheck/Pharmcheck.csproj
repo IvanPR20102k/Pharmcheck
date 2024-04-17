@@ -11,11 +11,13 @@
 
   <ItemGroup>
     <None Remove="Expero.ico" />
+    <None Remove="Resources\refresh.ico" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Expero.ico" />
     <Resource Include="Resources\Expero.ico" />
+    <Resource Include="Resources\refresh.ico" />
   </ItemGroup>
 
   <ItemGroup>

@@ -13,6 +13,7 @@ namespace Pharmcheck.Entities
         public string Name { get; set; } = null!;
         public float PriceMin { get; set; }
         public float PriceMax { get; set; }
+        public byte Status { get; set; }
 
         public int ImportID { get; set; }
         public Import Import { get; set; } = null!;
