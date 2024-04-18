@@ -227,9 +227,9 @@ namespace Pharmcheck.Pages
             switch (comparisonSelection)
             {
                 case 0: DataGridComparisons.ItemsSource = co; break;
-                case 1: DataGridComparisons.ItemsSource = co.Where(p => p.ParsingStatus == 1); break;
-                case 2: DataGridComparisons.ItemsSource = co.Where(p => p.ParsingStatus == 2); break;
-                case 3: DataGridComparisons.ItemsSource = co.Where(p => p.ParsingStatus == 3); break;
+                case 1: DataGridComparisons.ItemsSource = co.Where(с => с.ParsingStatus == 1); break;
+                case 2: DataGridComparisons.ItemsSource = co.Where(с => с.ParsingStatus == 2); break;
+                case 3: DataGridComparisons.ItemsSource = co.Where(с => с.ParsingStatus == 3); break;
             }
         }
 
