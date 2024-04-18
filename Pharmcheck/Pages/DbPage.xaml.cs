@@ -29,6 +29,7 @@ namespace Pharmcheck.Pages
     /// </summary>
     public partial class DbPage : Page
     {
+        int productSelection = 0, comparisonSelection = 0;
         public DbPage()
         {
             InitializeComponent();
@@ -70,6 +71,7 @@ namespace Pharmcheck.Pages
                     PriceMin = product.PriceMin,
                     PriceReal = lastComparison.Price,
                     PriceMax = product.PriceMax,
+                    Percentage = lastComparison.Percentage,
                     ComparisonDateTime = lastComparison.ComparisonDateTime,
                     Shops = lastComparison.ShopsAmount,
                     Status = lastComparison.ParsingStatus
@@ -99,6 +101,7 @@ namespace Pharmcheck.Pages
             public float PriceMin { get; set;}
             public float PriceReal { get; set;}
             public float PriceMax { get; set;}
+            public required string Percentage { get; set;}
             public string ComparisonDateTime { get; set; } = null!;
             public int Shops { get; set; }
             public int Status { get; set; }
@@ -154,9 +157,9 @@ namespace Pharmcheck.Pages
             TextBlockPharmacy.Text = selectedPharmacy.Name;
             DataGridImports.ItemsSource = Helper.GetDb().Imports.Where(i => i.PharmacyID == selectedPharmacy.ID)
                 .Where(i => i.ImportDateTime.Contains(TextBoxImportSearch.Text)).ToList();
-            DataGridProducts.ItemsSource = null;
             DataGridComparisons.ItemsSource = null;
-            TextBlockImport.Text = "Выберите импорт";
+            TextBlockMin.Text = "";
+            TextBlockMax.Text = "";
         }
         private void LoadProducts()
         {
@@ -167,11 +170,11 @@ namespace Pharmcheck.Pages
             var pr = Helper.GetDb().Products.Where(p => p.ImportID == selectedImport.ID)
                 .Where(p => p.ShopID.Contains(TextBoxProductsSearch.Text) || p.Name.Contains(TextBoxProductsSearch.Text)).ToList();
 
-            TButtonProductAll.Content = $" Все: {pr.Count} ";
+            RButtonProductAll.Content = $" Все: {pr.Count} ";
             int none = 0, green = 0, red = 0, error = 0;
             foreach ( Product p in pr )
             {
-                switch ( p.Status )
+                switch (p.Status)
                 {
                     case 0: none++; break;
                     case 1: green++; break;
@@ -179,22 +182,55 @@ namespace Pharmcheck.Pages
                     case 3: error++; break;
                 }
             }
-            TButtonProductGray.Content = $" Нет данных: {none} ";
-            TButtonProductGreen.Content = $" Соответствует: {green} ";
-            TButtonProductRed.Content = $" Не соответствует: {red} ";
-            TButtonProductYellow.Content = $" Ошибка: {error} ";
+            RButtonProductGray.Content = $" Нет данных: {none} ";
+            RButtonProductGreen.Content = $" Соответствует: {green} ";
+            RButtonProductRed.Content = $" Не соответствует: {red} ";
+            RButtonProductYellow.Content = $" Ошибка: {error} ";
 
-            DataGridProducts.ItemsSource = pr;
-            DataGridComparisons.ItemsSource = null;
+            switch (productSelection)
+            {
+                case 0: DataGridProducts.ItemsSource = pr; break;
+                case 1: DataGridProducts.ItemsSource = pr.Where(p => p.Status == 0); break;
+                case 2: DataGridProducts.ItemsSource = pr.Where(p => p.Status == 1); break;
+                case 3: DataGridProducts.ItemsSource = pr.Where(p => p.Status == 2); break;
+                case 4: DataGridProducts.ItemsSource = pr.Where(p => p.Status == 3); break;
+            }
             //ProductGridResize();
         }
         private void LoadComparisons()
         {
             Product selectedProduct = (Product)DataGridProducts.SelectedItem;
             if (selectedProduct == null) { return; }
-            DataGridComparisons.ItemsSource = Helper.GetDb().Comparisons.Where(c => c.ProductID == selectedProduct.ID)
+            RButtonComparisonAll.Content = $" Все: {DataGridComparisons.Items.Count} ";
+
+            TextBlockMin.Text = selectedProduct.PriceMin.ToString();
+            TextBlockMax.Text = selectedProduct.PriceMax.ToString();
+
+            var co = Helper.GetDb().Comparisons.Where(c => c.ProductID == selectedProduct.ID)
                 .Where(c => c.ComparisonDateTime.Contains(TextBoxComparisonsSearch.Text)).ToList();
-            TButtonComparisonAll.Content = $" Все: {DataGridComparisons.Items.Count} ";
+
+            RButtonComparisonAll.Content = $" Все: {co.Count} ";
+            int green = 0, red = 0, error = 0;
+            foreach (Comparison c in co)
+            {
+                switch (c.ParsingStatus)
+                {
+                    case 1: green++; break;
+                    case 2: red++; break;
+                    case 3: error++; break;
+                }
+            }
+            RButtonComparisonGreen.Content = $" Соответствует: {green} ";
+            RButtonComparisonRed.Content = $" Не соответствует: {red} ";
+            RButtonComparisonYellow.Content = $" Ошибка: {error} ";
+
+            switch (comparisonSelection)
+            {
+                case 0: DataGridComparisons.ItemsSource = co; break;
+                case 1: DataGridComparisons.ItemsSource = co.Where(p => p.ParsingStatus == 1); break;
+                case 2: DataGridComparisons.ItemsSource = co.Where(p => p.ParsingStatus == 2); break;
+                case 3: DataGridComparisons.ItemsSource = co.Where(p => p.ParsingStatus == 3); break;
+            }
         }
 
         //private void ProductGridResize()
@@ -213,6 +249,53 @@ namespace Pharmcheck.Pages
         private void Page_Initialized(object sender, EventArgs e)
         {
             
+        }
+
+        private void RButtonProductAll_Checked(object sender, RoutedEventArgs e)
+        {
+            productSelection = 0;
+            LoadProducts();
+        }
+        private void RButtonProductGray_Checked(object sender, RoutedEventArgs e)
+        {
+            productSelection = 1;
+            LoadProducts();
+        }
+        private void RButtonProductGreen_Checked(object sender, RoutedEventArgs e)
+        {
+            productSelection = 2;
+            LoadProducts();
+        }
+        private void RButtonProductRed_Checked(object sender, RoutedEventArgs e)
+        {
+            productSelection = 3;
+            LoadProducts();
+        }
+        private void RButtonProductYellow_Checked(object sender, RoutedEventArgs e)
+        {
+            productSelection = 4;
+            LoadProducts();
+        }
+
+        private void RButtonComparisonAll_Checked(object sender, RoutedEventArgs e)
+        {
+            comparisonSelection = 0;
+            LoadComparisons();
+        }
+        private void RButtonComparisonGreen_Checked(object sender, RoutedEventArgs e)
+        {
+            comparisonSelection = 1;
+            LoadComparisons();
+        }
+        private void RButtonComparisonRed_Checked(object sender, RoutedEventArgs e)
+        {
+            comparisonSelection = 2;
+            LoadComparisons();
+        }
+        private void RButtonComparisonYellow_Checked(object sender, RoutedEventArgs e)
+        {
+            comparisonSelection = 3;
+            LoadComparisons();
         }
     }
 }

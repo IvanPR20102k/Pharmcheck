@@ -12,6 +12,7 @@ namespace Pharmcheck.Entities
         public string ComparisonDateTime { get; set; } = null!;
         public int RequestStatus { get; set; }
         public float Price { get; set; }
+        public required string Percentage { get; set; }
         public int ShopsAmount { get; set; }
         public byte ParsingStatus { get; set; }
 

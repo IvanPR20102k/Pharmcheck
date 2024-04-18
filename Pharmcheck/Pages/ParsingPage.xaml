@@ -10,39 +10,85 @@
       Title="ParsingPage">
 
     <Grid Margin="5,0,5,5">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="30"/>
-        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
 
-        <Grid Grid.Column="1">
+        <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
 
-            <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="5,0,5,0">
-                <TextBlock Text="В очереди: "/>
-                <TextBlock Text="-" Margin="0,0,10,0"/>
-                <TextBlock Text="Выполнено: "/>
-                <TextBlock Text="-"/>
-            </StackPanel>
-            
-            <DataGrid x:Name="DataGridResults" SelectionMode="Single" IsReadOnly="True" Grid.Row="1" Margin="5,0,5,5">
+            <DockPanel LastChildFill="True" Margin="5,0,5,0">
+                <TextBlock x:Name="TextBlockPharmacy" Text="Выберите аптеку" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <Button x:Name="ButtonImportsRefresh" DockPanel.Dock="Right" Background="White" Height="20" Width="20" Margin="5,0,0,0" Click="ButtonImportsRefresh_Click">
+                    <Image Source="\Resources\refresh.ico" Stretch="Uniform"/>
+                </Button>
+                <TextBox x:Name="TextBoxImportSearch" VerticalAlignment="Center" Height="20" TextChanged="TextBoxImportSearch_TextChanged">
+                    <TextBox.Style>
+                        <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                            <Style.Resources>
+                                <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                    <VisualBrush.Visual>
+                                        <Label Content="Поиск" Foreground="LightGray" />
+                                    </VisualBrush.Visual>
+                                </VisualBrush>
+                            </Style.Resources>
+                            <Style.Triggers>
+                                <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                </Trigger>
+                                <Trigger Property="Text" Value="{x:Null}">
+                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                </Trigger>
+                                <Trigger Property="IsKeyboardFocused" Value="True">
+                                    <Setter Property="Background" Value="White" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+            </DockPanel>
+
+            <DataGrid x:Name="DataGridImportsParse" SelectionMode="Single" IsReadOnly="True" Grid.Row="1" Margin="5,0,5,0" SelectionChanged="DataGridImportsParse_SelectionChanged">
                 <DataGrid.Columns>
-                    <DataGridTemplateColumn CellTemplate="{StaticResource ParsingResults}" Width="*"></DataGridTemplateColumn>
+                    <DataGridTemplateColumn CellTemplate="{StaticResource Imports}" Width="*"></DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="2" Margin="5">
+                <Button x:Name="ButtonStart" Content="Старт" IsEnabled="False" Margin="0,0,5,0" Click="ButtonStart_Click"/>
+                <Button x:Name="ButtonPause" Content="Пауза" IsEnabled="False" Margin="5,0,5,0" Click="ButtonPause_Click"/>
+                <Button x:Name="ButtonStop" Content="Стоп" IsEnabled="False" Margin="5,0,0,0"/>
+            </StackPanel>
+
+            <Button x:Name="ButtonClear" Content="Отчистить лог" IsEnabled="False" Grid.Row="3" Margin="5" Click="ButtonClear_Click"/>
         </Grid>
 
-        <StackPanel>
-            <ComboBox x:Name="ComboBoxPharmacies" DisplayMemberPath="Name" Margin="5" SelectionChanged="ComboBoxPharmacies_SelectionChanged"/>
-            <Button x:Name="ButtonStart" Content="Запуск" Margin="5" Click="ButtonStart_Click"/>
-            <Button x:Name="ButtonClear" Content="Отчистить лог" Margin="5" Click="ButtonClear_Click"/>
+        <StackPanel VerticalAlignment="Center" Margin="5,0,5,0">
+            <ComboBox x:Name="ComboBoxPharmacies" DisplayMemberPath="Name" SelectionChanged="ComboBoxPharmacies_SelectionChanged"/>
         </StackPanel>
+
+        <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Grid.Column="1" Margin="5,0,5,0">
+            <TextBlock Text="В очереди: "/>
+            <TextBlock x:Name="TextBlockInQueue" Text="-" Margin="0,0,10,0"/>
+            <TextBlock Text="Выполнено: "/>
+            <TextBlock x:Name="TextBlockFinished" Text="-"/>
+        </StackPanel>
+
+        <DataGrid x:Name="DataGridResults" SelectionMode="Single" IsReadOnly="True" Grid.Column="1" Grid.Row="1" Margin="5,0,5,5">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn CellTemplate="{StaticResource ParsingResults}" Width="*"></DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Page>

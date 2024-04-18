@@ -142,11 +142,11 @@
         </DataGrid>
         <StackPanel Background="LightGray" Orientation="Horizontal" Grid.Column="1" Grid.Row="2" Margin="5,0,5,5">
             <StackPanel x:Name="SelectionBarProduct" Orientation="Horizontal">
-                <ToggleButton x:Name="TButtonProductAll" Content=" Все: 0 " Background="White" Style="{DynamicResource SortTButton}"/>
-                <ToggleButton x:Name="TButtonProductGray" Content=" Нет данных: 0 " Foreground="White" Background="Gray" BorderThickness="0" Style="{DynamicResource SortTButton}"/>
-                <ToggleButton x:Name="TButtonProductGreen" Content=" Соответствует: 0 " Foreground="White" Background="#00CD14" BorderThickness="0" Style="{DynamicResource SortTButton}"/>
-                <ToggleButton x:Name="TButtonProductRed" Content=" Не соответствует: 0 " Foreground="White" Background="#CD0000" BorderThickness="0" Style="{DynamicResource SortTButton}"/>
-                <ToggleButton x:Name="TButtonProductYellow" Content=" Ошибка: 0 " Background="#FFF84B" BorderThickness="0" Style="{DynamicResource SortTButton}"/>
+                <RadioButton x:Name="RButtonProductAll" Content=" Все: 0 " Background="White" Style="{DynamicResource SortRButton}" Checked="RButtonProductAll_Checked"/>
+                <RadioButton x:Name="RButtonProductGray" Content=" Нет данных: 0 " Foreground="White" Background="Gray" BorderThickness="0" Style="{DynamicResource SortRButton}" Checked="RButtonProductGray_Checked"/>
+                <RadioButton x:Name="RButtonProductGreen" Content=" Соответствует: 0 " Foreground="White" Background="#00CD14" BorderThickness="0" Style="{DynamicResource SortRButton}" Checked="RButtonProductGreen_Checked"/>
+                <RadioButton x:Name="RButtonProductRed" Content=" Не соответствует: 0 " Foreground="White" Background="#CD0000" BorderThickness="0" Style="{DynamicResource SortRButton}" Checked="RButtonProductRed_Checked"/>
+                <RadioButton x:Name="RButtonProductYellow" Content=" Ошибка: 0 " Background="#FFF84B" BorderThickness="0" Style="{DynamicResource SortRButton}" Checked="RButtonProductYellow_Checked"/>
             </StackPanel>
         </StackPanel>
 
@@ -183,25 +183,33 @@
         <DockPanel LastChildFill="True" Grid.Column="2" Grid.Row="1" Margin="5,0,5,0">
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0,0,0,5">
                 <TextBlock Text="Минимальная цена:"/>
-                <TextBlock x:Name="TextBlockMin" Margin="5,0,5,0"/>
+                <TextBlock x:Name="TextBlockMin" Margin="5,0,10,0"/>
                 <TextBlock Text="Максимальная цена:"/>
                 <TextBlock x:Name="TextBlockMax" Margin="5,0,5,0"/>
             </StackPanel>
-            <DataGrid x:Name="DataGridComparisons" SelectionMode="Single" IsReadOnly="True" AutoGenerateColumns="False" CanUserResizeRows="False" Style="{x:Null}" >
+            <DataGrid x:Name="DataGridComparisons" SelectionMode="Single" IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="Column" GridLinesVisibility="Horizontal" CanUserResizeRows="False" Style="{x:Null}" >
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Дата и время" Binding="{Binding ComparisonDateTime}" Width="Auto"/>
                     <DataGridTextColumn Header="Ответ" Binding="{Binding RequestStatus}" Width="Auto"/>
                     <DataGridTextColumn Header="Статус" Binding="{Binding ParsingStatus}" Width="Auto"/>
                     <DataGridTextColumn Header="Цена" Binding="{Binding Price}" Width="Auto"/>
+                    <DataGridTextColumn Header="Отклонение" Binding="{Binding Percentage}" Width="Auto"/>
                     <DataGridTextColumn Header="Аптеки" Binding="{Binding ShopsAmount}" Width="Auto"/>
                 </DataGrid.Columns>
+                <DataGrid.CellStyle>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                        <Setter Property="TextBlock.VerticalAlignment" Value="Center"/>
+                        <Setter Property="Height" Value="30"/>
+                    </Style>
+                </DataGrid.CellStyle>
             </DataGrid>
         </DockPanel>
         <StackPanel x:Name="SelectionBarComparison" Background="LightGray" Orientation="Horizontal" Grid.Column="2" Grid.Row="2" Margin="5,0,5,5">
-            <ToggleButton x:Name="TButtonComparisonAll" Content=" Все: 0 " Background="White" Style="{DynamicResource SortTButton}"/>
-            <ToggleButton x:Name="TButtonComparisonGreen" Content=" Соответствует: 0 " Foreground="White" Background="#00CD14" BorderThickness="0" Style="{DynamicResource SortTButton}"/>
-            <ToggleButton x:Name="TButtonComparisonRed" Content=" Не соответствует: 0 " Foreground="White" Background="#CD0000" BorderThickness="0" Style="{DynamicResource SortTButton}"/>
-            <ToggleButton x:Name="TButtonComparisonYellow" Content=" Ошибка: 0 " Background="#FFF84B" BorderThickness="0" Style="{DynamicResource SortTButton}"/>
+            <RadioButton x:Name="RButtonComparisonAll" Content=" Все: 0 " Background="White" Style="{DynamicResource SortRButton}" Checked="RButtonComparisonAll_Checked"/>
+            <RadioButton x:Name="RButtonComparisonGreen" Content=" Соответствует: 0 " Foreground="White" Background="#00CD14" BorderThickness="0" Style="{DynamicResource SortRButton}" Checked="RButtonComparisonGreen_Checked"/>
+            <RadioButton x:Name="RButtonComparisonRed" Content=" Не соответствует: 0 " Foreground="White" Background="#CD0000" BorderThickness="0" Style="{DynamicResource SortRButton}" Checked="RButtonComparisonRed_Checked"/>
+            <RadioButton x:Name="RButtonComparisonYellow" Content=" Ошибка: 0 " Background="#FFF84B" BorderThickness="0" Style="{DynamicResource SortRButton}" Checked="RButtonComparisonYellow_Checked"/>
         </StackPanel>
     </Grid>
 </Page>

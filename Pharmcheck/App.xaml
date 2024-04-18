@@ -9,7 +9,7 @@
             <Setter Property="CheckBox.Background" Value="LightGray"/>
         </Style>
 
-        <Style x:Key="SortTButton" TargetType="ToggleButton">
+        <Style x:Key="SortRButton" TargetType="RadioButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
             <Setter Property="MinWidth" Value="20"/>
             <Setter Property="Height" Value="20"/>
             <Setter Property="Margin" Value="2.5"/>
@@ -87,6 +87,8 @@
                     <TextBlock Text="{Binding Price}" Margin="0,5,5,5"/>
                     <TextBlock Text="Максимальная цена: " Margin="5,5,0,5"/>
                     <TextBlock Text="{Binding Path=Product.PriceMax}" Margin="0,5,5,5"/>
+                    <TextBlock Text="Отклонение: " Margin="5,5,0,5"/>
+                    <TextBlock Text="{Binding Percentage}" Margin="0,5,5,5"/>
                     <TextBlock Text="Кол-во магазинов: " Margin="5,5,0,5"/>
                     <TextBlock Text="{Binding ShopsAmount}" Margin="0,5,5,5"/>
                 </StackPanel>

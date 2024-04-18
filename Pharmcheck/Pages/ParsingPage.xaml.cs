@@ -23,7 +23,10 @@ namespace Pharmcheck.Pages
     /// </summary>
     public partial class ParsingPage : Page
     {
-        List<Comparison> resultsList = [];
+        private readonly List<Comparison> resultsList = [];
+        //bool pause = false;
+        //bool stop = false;
+
         public ParsingPage()
         {
             InitializeComponent();
@@ -32,8 +35,16 @@ namespace Pharmcheck.Pages
 
         private void ComboBoxPharmacies_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ComboBoxPharmacies.SelectedItem != null) ButtonStart.IsEnabled = true;
-            else ButtonStart.IsEnabled = false;
+            LoadImports();
+        }
+
+        private void LoadImports()
+        {
+            Pharmacy selectedPharmacy = (Pharmacy)ComboBoxPharmacies.SelectedItem;
+            if (selectedPharmacy == null) { return; }
+            TextBlockPharmacy.Text = selectedPharmacy.Name;
+            DataGridImportsParse.ItemsSource = Helper.GetDb().Imports.Where(i => i.PharmacyID == selectedPharmacy.ID)
+                .Where(i => i.ImportDateTime.Contains(TextBoxImportSearch.Text)).ToList();
         }
 
         private async void ButtonStart_Click(object sender, RoutedEventArgs e)
@@ -41,8 +52,15 @@ namespace Pharmcheck.Pages
             try
             {
                 if (ComboBoxPharmacies.SelectedItem is not Pharmacy pharmacy) { return; }
+                ComboBoxPharmacies.IsEnabled = false;
+                DataGridImportsParse.IsEnabled = false;
+                TextBoxImportSearch.IsEnabled = false;
+                ButtonImportsRefresh.IsEnabled = false;
+
                 //Создание очереди для парсинга
                 List<int> queue = Helper.GetDb().Imports.Where(i => i.PharmacyID == pharmacy.ID).OrderBy(i => i.ID).Last().Products.Select(p => p.ID).ToList();
+                int queueCount = queue.Count;
+
                 switch (pharmacy.Name)
                 {
                     case "Аптека легко":
@@ -61,11 +79,22 @@ namespace Pharmcheck.Pages
                             if (price > product.PriceMin && price < product.PriceMax) parsingStatus = 1;
                             else parsingStatus = 2;
 
+                            string percentage = "0";
+                            if (price < product.PriceMin)
+                            {
+                                percentage = $"- {(100 - price / (product.PriceMin / 100)).ToString("0.##", System.Globalization.CultureInfo.CurrentCulture)}%";
+                            }
+                            if (price > product.PriceMax)
+                            {
+                                percentage = $"+ {(price / (product.PriceMax / 100) - 100).ToString("0.##", System.Globalization.CultureInfo.CurrentCulture)}%";
+                            }
+
                             Comparison newComparison = new()
                             {
                                 RequestStatus = requestStatus,
                                 ComparisonDateTime = DateTime.Now.ToString(),
                                 Price = price,
+                                Percentage = percentage,
                                 ShopsAmount = shops,
                                 ParsingStatus = parsingStatus
                             };
@@ -73,6 +102,9 @@ namespace Pharmcheck.Pages
                             product.Status = parsingStatus;
                             Helper.GetDb().SaveChanges();
                             resultsList.Add(newComparison);
+                            queueCount--;
+                            TextBlockInQueue.Text = (queueCount).ToString();
+                            TextBlockFinished.Text = (resultsList.Count).ToString();
                             DataGridResults.ItemsSource = resultsList;
                             DataGridResults.Items.Refresh();
                             await Task.Run(() => Thread.Sleep(1000));
@@ -84,12 +116,55 @@ namespace Pharmcheck.Pages
             {
                 MessageBox.Show(ex.ToString());
             }
+            finally
+            {
+                ComboBoxPharmacies.IsEnabled = true;
+                DataGridImportsParse.IsEnabled = true;
+                TextBoxImportSearch.IsEnabled = true;
+                ButtonImportsRefresh.IsEnabled = true;
+            }
         }
 
         private void ButtonClear_Click(object sender, RoutedEventArgs e)
         {
             resultsList.Clear();
             DataGridResults.Items.Refresh();
+        }
+
+        private void DataGridImportsParse_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Import selectedImport = (Import)DataGridImportsParse.SelectedItem;
+            if (selectedImport == null)
+            {
+                ButtonStart.IsEnabled = false;
+                return;
+            }
+            TextBlockInQueue.Text = Helper.GetDb().Products.Where(p => p.ImportID == selectedImport.ID).Count().ToString();
+            ButtonStart.IsEnabled = true;
+        }
+
+        private void ButtonPause_Click(object sender, RoutedEventArgs e)
+        {
+            //if (pause == false)
+            //{
+            //    mre.Reset();
+            //    ButtonPause.Content = "Продолжить";
+            //}
+            //else
+            //{
+            //    mre.Set();
+            //    ButtonPause.Content = "Пауза";
+            //}
+        }
+
+        private void ButtonImportsRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            LoadImports();
+        }
+
+        private void TextBoxImportSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            LoadImports();
         }
     }
 }
