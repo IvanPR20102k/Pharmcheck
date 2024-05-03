@@ -19,8 +19,6 @@ using System.Globalization;
 using CsvHelper.Configuration;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.EntityFrameworkCore;
-using System.Windows.Data;
-using System.Windows.Media;
 using System.CodeDom;
 
 namespace Pharmcheck.Pages
@@ -297,26 +295,6 @@ namespace Pharmcheck.Pages
         {
             comparisonSelection = 3;
             LoadComparisons();
-        }
-    }
-
-    public class StatusToColorConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return value switch
-            {
-                (byte)0 => System.Windows.Media.Brushes.Gray,
-                (byte)1 => new SolidColorBrush(Color.FromRgb(0, 205, 20)), //Зелёный
-                (byte)2 => new SolidColorBrush(Color.FromRgb(205, 0, 0)), //Красный
-                (byte)3 => new SolidColorBrush(Color.FromRgb(255, 248, 75)), //Жёлтый
-                _ => System.Windows.Media.Brushes.Blue,
-            };
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
         }
     }
 }

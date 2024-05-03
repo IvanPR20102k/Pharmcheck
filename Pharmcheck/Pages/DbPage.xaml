@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Pharmcheck.Pages"
+      xmlns:conv="clr-namespace:Pharmcheck.Converters"
       mc:Ignorable="d"
       d:DesignWidth="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Width}"
       d:DesignHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}"
@@ -13,7 +14,8 @@
 
     <Page.Resources>
 
-        <local:StatusToColorConverter x:Key="StatusToColor"/>
+        <conv:StatusToColorConverter x:Key="StatusToColorConverter"/>
+        <conv:StatusToForegroundConverter x:Key="StatusToForegroundConverter"/>
 
         <DataTemplate x:Key="Pharmacies">
             <Border BorderThickness="1" BorderBrush="Black">
@@ -40,7 +42,7 @@
                     <Rectangle
                         Height="Auto" Width="10"
                         Margin="5"
-                        Fill="{Binding Status, Converter={StaticResource StatusToColor}}"/>
+                        Fill="{Binding Status, Converter={StaticResource StatusToColorConverter}}"/>
                     <StackPanel Margin="0,5,0,5">
                         <TextBlock
                             Text="{Binding Name}"
@@ -54,6 +56,15 @@
                 </StackPanel>
             </Border>
         </DataTemplate>
+
+
+        <Style x:Key="PriceStyle"
+               TargetType="TextBlock">
+            <Setter Property="Foreground"
+                    Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}, 
+                    Path =Item.ParsingStatus, 
+                    Converter={StaticResource StatusToForegroundConverter}}"/>
+        </Style>
 
         <Style x:Key="SearchBox"
                TargetType="TextBox"
@@ -314,7 +325,7 @@
                     <DataGridTextColumn Header="Дата и время" Binding="{Binding ComparisonDateTime}" Width="Auto"/>
                     <DataGridTextColumn Header="Ответ" Binding="{Binding RequestStatus}" Width="Auto"/>
                     <DataGridTextColumn Header="Статус" Binding="{Binding ParsingStatus}" Width="Auto"/>
-                    <DataGridTextColumn Header="Цена" Binding="{Binding Price}" Width="Auto"/>
+                    <DataGridTextColumn Header="Цена" Binding="{Binding Price}" FontWeight="Bold" ElementStyle="{DynamicResource PriceStyle}" Width="Auto"/>
                     <DataGridTextColumn Header="Отклонение" Binding="{Binding Percentage}" Width="Auto"/>
                     <DataGridTextColumn Header="Аптеки" Binding="{Binding ShopsAmount}" Width="Auto"/>
                 </DataGrid.Columns>
@@ -322,7 +333,7 @@
                     <Style TargetType="DataGridCell">
                         <Setter Property="TextBlock.TextAlignment" Value="Center"/>
                         <Setter Property="TextBlock.VerticalAlignment" Value="Center"/>
-                        <Setter Property="Height" Value="30"/>
+                        <Setter Property="TextBlock.Text" Value="{}"/>
                     </Style>
                 </DataGrid.CellStyle>
             </DataGrid>
