@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:Pharmcheck"
         mc:Ignorable="d"
         Title="Pharmcheck"
-        Width="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Width}"
+        Width="1280"
         MinWidth="1024"
-        Height="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}"
+        Height="720"
         MinHeight="576"
         Loaded="Window_Loaded" Icon="/Expero.ico">
     <Grid>
@@ -18,14 +18,28 @@
         </Grid.RowDefinitions>
 
         <ToolBar>
-            <CheckBox x:Name="CheckBoxDbView" Content=" База данных " Margin="5,0,5,0" Style="{DynamicResource Light}" Checked="CheckBoxDbView_Checked"/>
+            <CheckBox x:Name="CheckBoxDbView"
+                      Content=" База данных "
+                      Style="{DynamicResource Light}"
+                      Margin="5,0,5,0"
+                      Checked="CheckBoxDbView_Checked"/>
             <Separator/>
-            <CheckBox x:Name="CheckBoxParsing" Content=" Парсинг " Margin="5,0,5,0" Style="{DynamicResource Light}" Checked="CheckBoxParsing_Checked"/>
+            <CheckBox x:Name="CheckBoxParsing"
+                      Content=" Парсинг "
+                      Style="{DynamicResource Light}"
+                      Margin="5,0,5,0"
+                      Checked="CheckBoxParsing_Checked"/>
             <Separator/>
-            <CheckBox x:Name="CheckBoxImport" Content=" Импорт " Margin="5,0,5,0" Style="{DynamicResource Light}" Checked="CheckBoxImport_Checked"/>
+            <CheckBox x:Name="CheckBoxImport"
+                      Content=" Импорт "
+                      Style="{DynamicResource Light}"
+                      Margin="5,0,5,0"
+                      Checked="CheckBoxImport_Checked"/>
         </ToolBar>
 
-        <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" Grid.Row="1" />
+        <Frame x:Name="MainFrame"
+               NavigationUIVisibility="Hidden"
+               Grid.Row="1" />
 
     </Grid>
 </Window>

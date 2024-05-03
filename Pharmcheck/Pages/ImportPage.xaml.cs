@@ -86,7 +86,7 @@ namespace Pharmcheck.Pages
                     ImportDateTime = File.GetCreationTime(filePath).ToString(),
                 };
                 Helper.GetDb().Update(selectedPharmacy);
-                foreach (var rawProduct in outputRows)
+                foreach (ProductImport rawProduct in outputRows)
                 {
                     Product newProduct = new()
                     {

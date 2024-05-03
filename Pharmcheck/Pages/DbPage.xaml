@@ -11,6 +11,87 @@
       VerticalAlignment="Stretch"
       Title="DbPage" Loaded="Page_Loaded" Initialized="Page_Initialized">
 
+    <Page.Resources>
+
+        <local:StatusToColorConverter x:Key="StatusToColor"/>
+
+        <DataTemplate x:Key="Pharmacies">
+            <Border BorderThickness="1" BorderBrush="Black">
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="{Binding Name}"/>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+
+        <DataTemplate x:Key="Imports">
+            <Border BorderThickness="1" BorderBrush="Black">
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="{Binding ID}" Margin="5"/>
+                    <TextBlock Text="{Binding ImportDateTime}" Margin="5"/>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+        
+        <DataTemplate x:Key="Products">
+            <Border
+                BorderThickness="1"
+                BorderBrush="Black">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle
+                        Height="Auto" Width="10"
+                        Margin="5"
+                        Fill="{Binding Status, Converter={StaticResource StatusToColor}}"/>
+                    <StackPanel Margin="0,5,0,5">
+                        <TextBlock
+                            Text="{Binding Name}"
+                            TextWrapping="WrapWithOverflow"
+                            Margin="0,0,0,2"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="ID: "/>
+                            <TextBlock Text="{Binding ShopID}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+
+        <Style x:Key="SearchBox"
+               TargetType="TextBox"
+               xmlns:sys="clr-namespace:System;assembly=mscorlib">
+            <Style.Resources>
+                <VisualBrush x:Key="CueBannerBrush"
+                             AlignmentX="Left"
+                             AlignmentY="Center"
+                             Stretch="None">
+                    <VisualBrush.Visual>
+                        <Label Content="Поиск" Foreground="LightGray" />
+                    </VisualBrush.Visual>
+                </VisualBrush>
+            </Style.Resources>
+            <Style.Triggers>
+                <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                </Trigger>
+                <Trigger Property="Text" Value="{x:Null}">
+                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                </Trigger>
+                <Trigger Property="IsKeyboardFocused" Value="True">
+                    <Setter Property="Background" Value="White" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="SortRButton"
+               TargetType="RadioButton"
+               BasedOn="{StaticResource {x:Type ToggleButton}}">
+            <Setter Property="MinWidth" Value="20"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Margin" Value="2.5"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+        </Style>
+
+    </Page.Resources>
+    
     <Grid Margin="5,0,5,5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
@@ -24,32 +105,18 @@
             <RowDefinition Height="30" MaxHeight="30"/>
         </Grid.RowDefinitions>
 
-        <DockPanel LastChildFill="True" Margin="5,0,5,0">
-            <TextBlock Text="Аптеки" VerticalAlignment="Center" Margin="0,0,5,0"/>
-            <TextBox x:Name="TextBoxPharmacySearch" VerticalAlignment="Center" Height="20" TextChanged="TextBoxPharmacySearch_TextChanged">
-                <TextBox.Style>
-                    <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
-                        <Style.Resources>
-                            <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                <VisualBrush.Visual>
-                                    <Label Content="Поиск" Foreground="LightGray" />
-                                </VisualBrush.Visual>
-                            </VisualBrush>
-                        </Style.Resources>
-                        <Style.Triggers>
-                            <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
-                                <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                            </Trigger>
-                            <Trigger Property="Text" Value="{x:Null}">
-                                <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                            </Trigger>
-                            <Trigger Property="IsKeyboardFocused" Value="True">
-                                <Setter Property="Background" Value="White" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </TextBox.Style>
-            </TextBox>
+        <DockPanel
+            LastChildFill="True"
+            Margin="5,0,5,0">
+            <TextBlock
+                Text="Аптеки"
+                VerticalAlignment="Center"
+                Margin="0,0,5,0"/>
+            <TextBox x:Name="TextBoxPharmacySearch"
+                VerticalAlignment="Center"
+                Height="20"
+                Style="{DynamicResource ResourceKey=SearchBox}"
+                TextChanged="TextBoxPharmacySearch_TextChanged"/>
         </DockPanel>
 
         <Grid Grid.Row="1">
@@ -59,135 +126,190 @@
                 <RowDefinition Height="3*"/>
             </Grid.RowDefinitions>
 
-            <DataGrid x:Name="DataGridPharmacies" SelectionMode="Single" IsReadOnly="True" Margin="5,0,5,5" SelectionChanged="DataGridPharmacies_SelectionChanged">
+            <DataGrid
+                x:Name="DataGridPharmacies"
+                SelectionMode="Single"
+                IsReadOnly="True"
+                Margin="5,0,5,5"
+                SelectionChanged="DataGridPharmacies_SelectionChanged">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn CellTemplate="{StaticResource Pharmacies}" Width="*"></DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
 
-            <DockPanel LastChildFill="True" Grid.Row="1" Margin="5,0,5,0">
-                <TextBlock x:Name="TextBlockPharmacy" Text="Выберите аптеку" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                <Button x:Name="ButtonImportsRefresh" DockPanel.Dock="Right" Background="White" Height="20" Width="20" Margin="5,0,0,0" Click="ButtonImportsRefresh_Click">
+            <DockPanel
+                LastChildFill="True"
+                Grid.Row="1"
+                Margin="5,0,5,0">
+                <TextBlock x:Name="TextBlockPharmacy"
+                           Text="Выберите аптеку"
+                           DockPanel.Dock="Left"
+                           VerticalAlignment="Center"
+                           Margin="0,0,5,0"/>
+                <Button x:Name="ButtonImportsRefresh"
+                        DockPanel.Dock="Right"
+                        Background="White"
+                        Height="20" Width="20"
+                        Margin="5,0,0,0"
+                        Click="ButtonImportsRefresh_Click">
                     <Image Source="\Resources\refresh.ico" Stretch="Uniform"/>
                 </Button>
-                <TextBox x:Name="TextBoxImportSearch" VerticalAlignment="Center" Height="20" TextChanged="TextBoxImportSearch_TextChanged">
-                    <TextBox.Style>
-                        <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
-                            <Style.Resources>
-                                <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                    <VisualBrush.Visual>
-                                        <Label Content="Поиск" Foreground="LightGray" />
-                                    </VisualBrush.Visual>
-                                </VisualBrush>
-                            </Style.Resources>
-                            <Style.Triggers>
-                                <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
-                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                </Trigger>
-                                <Trigger Property="Text" Value="{x:Null}">
-                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                </Trigger>
-                                <Trigger Property="IsKeyboardFocused" Value="True">
-                                    <Setter Property="Background" Value="White" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBox.Style>
-                </TextBox>
+                <TextBox x:Name="TextBoxImportSearch"
+                         VerticalAlignment="Center"
+                         Height="20"
+                         Style="{DynamicResource ResourceKey=SearchBox}"
+                         TextChanged="TextBoxImportSearch_TextChanged"/>
             </DockPanel>
-
-            <DataGrid x:Name="DataGridImports" SelectionMode="Single" IsReadOnly="True" Grid.Row="2" Margin="5,0,5,0" SelectionChanged="DataGridImports_SelectionChanged">
+            <DataGrid x:Name="DataGridImports"
+                      SelectionMode="Single"
+                      IsReadOnly="True"
+                      Grid.Row="2"
+                      Margin="5,0,5,0"
+                      SelectionChanged="DataGridImports_SelectionChanged">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn CellTemplate="{StaticResource Imports}" Width="*"></DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
 
-        <Button x:Name="ButtonExportTest" Content="Экспорт" Grid.Row="3" Margin="5" Click="ButtonExportTest_Click"/>
+        <Button
+            x:Name="ButtonExportTest"
+            Content="Экспорт"
+            Grid.Row="3"
+            Margin="5"
+            Click="ButtonExportTest_Click"/>
 
-        <DockPanel LastChildFill="True" Grid.Column="1" Margin="5,0,5,0">
-            <TextBlock x:Name="TextBlockImport" Text="Выберите импорт" VerticalAlignment="Center" Margin="0,0,5,0"/>
-            <Button x:Name="ButtonProductsRefresh" DockPanel.Dock="Right" Background="White" Height="20" Width="20" Margin="5,0,0,0" Click="ButtonProductsRefresh_Click">
+        <DockPanel
+            LastChildFill="True"
+            Grid.Column="1"
+            Margin="5,0,5,0">
+            <TextBlock
+                x:Name="TextBlockImport"
+                Text="Выберите импорт"
+                VerticalAlignment="Center"
+                Margin="0,0,5,0"/>
+            <Button
+                x:Name="ButtonProductsRefresh"
+                DockPanel.Dock="Right"
+                Background="White"
+                Height="20" Width="20"
+                Margin="5,0,0,0"
+                Click="ButtonProductsRefresh_Click">
                 <Image Source="\Resources\refresh.ico" Stretch="Uniform"/>
             </Button>
-            <TextBox x:Name="TextBoxProductsSearch" VerticalAlignment="Center" Height="20" TextChanged="TextBoxProductsSearch_TextChanged">
-                <TextBox.Style>
-                    <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
-                        <Style.Resources>
-                            <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                <VisualBrush.Visual>
-                                    <Label Content="Поиск" Foreground="LightGray" />
-                                </VisualBrush.Visual>
-                            </VisualBrush>
-                        </Style.Resources>
-                        <Style.Triggers>
-                            <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
-                                <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                            </Trigger>
-                            <Trigger Property="Text" Value="{x:Null}">
-                                <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                            </Trigger>
-                            <Trigger Property="IsKeyboardFocused" Value="True">
-                                <Setter Property="Background" Value="White" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </TextBox.Style>
-            </TextBox>
+            <TextBox
+                x:Name="TextBoxProductsSearch"
+                VerticalAlignment="Center"
+                Height="20"
+                Style="{DynamicResource ResourceKey=SearchBox}"
+                TextChanged="TextBoxProductsSearch_TextChanged"/>
         </DockPanel>
-        <DataGrid x:Name="DataGridProducts" SelectionMode="Single" IsReadOnly="True" Grid.Column="1" Grid.Row="1" Margin="5,0,5,0" SelectionChanged="DataGridProducts_SelectionChanged">
+        <DataGrid
+            x:Name="DataGridProducts"
+            SelectionMode="Single"
+            IsReadOnly="True"
+            Grid.Column="1" Grid.Row="1"
+            Margin="5,0,5,0"
+            SelectionChanged="DataGridProducts_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTemplateColumn CellTemplate="{StaticResource Products}" Width="*"></DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <StackPanel Background="LightGray" Orientation="Horizontal" Grid.Column="1" Grid.Row="2" Margin="5,0,5,5">
-            <StackPanel x:Name="SelectionBarProduct" Orientation="Horizontal">
-                <RadioButton x:Name="RButtonProductAll" Content=" Все: 0 " Background="White" Style="{DynamicResource SortRButton}" Checked="RButtonProductAll_Checked"/>
-                <RadioButton x:Name="RButtonProductGray" Content=" Нет данных: 0 " Foreground="White" Background="Gray" BorderThickness="0" Style="{DynamicResource SortRButton}" Checked="RButtonProductGray_Checked"/>
-                <RadioButton x:Name="RButtonProductGreen" Content=" Соответствует: 0 " Foreground="White" Background="#00CD14" BorderThickness="0" Style="{DynamicResource SortRButton}" Checked="RButtonProductGreen_Checked"/>
-                <RadioButton x:Name="RButtonProductRed" Content=" Не соответствует: 0 " Foreground="White" Background="#CD0000" BorderThickness="0" Style="{DynamicResource SortRButton}" Checked="RButtonProductRed_Checked"/>
-                <RadioButton x:Name="RButtonProductYellow" Content=" Ошибка: 0 " Background="#FFF84B" BorderThickness="0" Style="{DynamicResource SortRButton}" Checked="RButtonProductYellow_Checked"/>
+        <StackPanel
+            Background="LightGray"
+            Orientation="Horizontal"
+            Grid.Column="1" Grid.Row="2"
+            Margin="5,0,5,5">
+            <StackPanel
+                x:Name="SelectionBarProduct"
+                Orientation="Horizontal">
+                <RadioButton
+                    x:Name="RButtonProductAll"
+                    Content=" Все: 0 "
+                    Background="White"
+                    Style="{DynamicResource SortRButton}"
+                    Checked="RButtonProductAll_Checked"/>
+                <RadioButton
+                    x:Name="RButtonProductGray"
+                    Content=" Нет данных: 0 "
+                    Foreground="White"
+                    Background="Gray"
+                    BorderThickness="0"
+                    Style="{DynamicResource SortRButton}"
+                    Checked="RButtonProductGray_Checked"/>
+                <RadioButton
+                    x:Name="RButtonProductGreen"
+                    Content=" Соответствует: 0 "
+                    Foreground="White"
+                    Background="#00CD14"
+                    BorderThickness="0"
+                    Style="{DynamicResource SortRButton}"
+                    Checked="RButtonProductGreen_Checked"/>
+                <RadioButton
+                    x:Name="RButtonProductRed"
+                    Content=" Не соответствует: 0 "
+                    Foreground="White"
+                    Background="#CD0000"
+                    BorderThickness="0"
+                    Style="{DynamicResource SortRButton}"
+                    Checked="RButtonProductRed_Checked"/>
+                <RadioButton
+                    x:Name="RButtonProductYellow"
+                    Content=" Ошибка: 0 "
+                    Background="#FFF84B"
+                    BorderThickness="0"
+                    Style="{DynamicResource SortRButton}"
+                    Checked="RButtonProductYellow_Checked"/>
             </StackPanel>
         </StackPanel>
 
-        <DockPanel LastChildFill="True" Grid.Column="2" Margin="5,0,5,0">
-            <TextBlock Text="Сравнения" VerticalAlignment="Center" Margin="0,0,5,0"/>
-            <Button x:Name="ButtonComparisonsRefresh" DockPanel.Dock="Right" Background="White" Height="20" Width="20" Margin="5,0,0,0" Click="ButtonComparisonsRefresh_Click">
+        <DockPanel
+            LastChildFill="True"
+            Grid.Column="2"
+            Margin="5,0,5,0">
+            <TextBlock
+                Text="Сравнения"
+                VerticalAlignment="Center"
+                Margin="0,0,5,0"/>
+            <Button
+                x:Name="ButtonComparisonsRefresh"
+                DockPanel.Dock="Right"
+                Background="White"
+                Height="20" Width="20"
+                Margin="5,0,0,0"
+                Click="ButtonComparisonsRefresh_Click">
                 <Image Source="\Resources\refresh.ico" Stretch="Uniform"/>
             </Button>
-            <TextBox x:Name="TextBoxComparisonsSearch" VerticalAlignment="Center" Height="20" TextChanged="TextBoxComparisonsSearch_TextChanged">
-                <TextBox.Style>
-                    <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
-                        <Style.Resources>
-                            <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                <VisualBrush.Visual>
-                                    <Label Content="Поиск" Foreground="LightGray" />
-                                </VisualBrush.Visual>
-                            </VisualBrush>
-                        </Style.Resources>
-                        <Style.Triggers>
-                            <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
-                                <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                            </Trigger>
-                            <Trigger Property="Text" Value="{x:Null}">
-                                <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                            </Trigger>
-                            <Trigger Property="IsKeyboardFocused" Value="True">
-                                <Setter Property="Background" Value="White" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </TextBox.Style>
-            </TextBox>
+            <TextBox
+                x:Name="TextBoxComparisonsSearch"
+                VerticalAlignment="Center"
+                Height="20"
+                Style="{DynamicResource ResourceKey=SearchBox}"
+                TextChanged="TextBoxComparisonsSearch_TextChanged"/>
         </DockPanel>
-        <DockPanel LastChildFill="True" Grid.Column="2" Grid.Row="1" Margin="5,0,5,0">
-            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0,0,0,5">
+        <DockPanel
+            LastChildFill="True"
+            Grid.Column="2"
+            Grid.Row="1"
+            Margin="5,0,5,0">
+            <StackPanel
+                Orientation="Horizontal"
+                DockPanel.Dock="Top"
+                Margin="0,0,0,5">
                 <TextBlock Text="Минимальная цена:"/>
                 <TextBlock x:Name="TextBlockMin" Margin="5,0,10,0"/>
                 <TextBlock Text="Максимальная цена:"/>
                 <TextBlock x:Name="TextBlockMax" Margin="5,0,5,0"/>
             </StackPanel>
-            <DataGrid x:Name="DataGridComparisons" SelectionMode="Single" IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="Column" GridLinesVisibility="Horizontal" CanUserResizeRows="False" Style="{x:Null}" >
+            <DataGrid
+                x:Name="DataGridComparisons"
+                SelectionMode="Single"
+                IsReadOnly="True"
+                AutoGenerateColumns="False"
+                HeadersVisibility="Column"
+                GridLinesVisibility="Horizontal"
+                CanUserResizeRows="False"
+                Style="{x:Null}" >
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Дата и время" Binding="{Binding ComparisonDateTime}" Width="Auto"/>
                     <DataGridTextColumn Header="Ответ" Binding="{Binding RequestStatus}" Width="Auto"/>
@@ -205,11 +327,41 @@
                 </DataGrid.CellStyle>
             </DataGrid>
         </DockPanel>
-        <StackPanel x:Name="SelectionBarComparison" Background="LightGray" Orientation="Horizontal" Grid.Column="2" Grid.Row="2" Margin="5,0,5,5">
-            <RadioButton x:Name="RButtonComparisonAll" Content=" Все: 0 " Background="White" Style="{DynamicResource SortRButton}" Checked="RButtonComparisonAll_Checked"/>
-            <RadioButton x:Name="RButtonComparisonGreen" Content=" Соответствует: 0 " Foreground="White" Background="#00CD14" BorderThickness="0" Style="{DynamicResource SortRButton}" Checked="RButtonComparisonGreen_Checked"/>
-            <RadioButton x:Name="RButtonComparisonRed" Content=" Не соответствует: 0 " Foreground="White" Background="#CD0000" BorderThickness="0" Style="{DynamicResource SortRButton}" Checked="RButtonComparisonRed_Checked"/>
-            <RadioButton x:Name="RButtonComparisonYellow" Content=" Ошибка: 0 " Background="#FFF84B" BorderThickness="0" Style="{DynamicResource SortRButton}" Checked="RButtonComparisonYellow_Checked"/>
+        <StackPanel
+            x:Name="SelectionBarComparison"
+            Background="LightGray"
+            Orientation="Horizontal"
+            Grid.Column="2" Grid.Row="2"
+            Margin="5,0,5,5">
+            <RadioButton
+                x:Name="RButtonComparisonAll"
+                Content=" Все: 0 "
+                Background="White"
+                Style="{DynamicResource SortRButton}"
+                Checked="RButtonComparisonAll_Checked"/>
+            <RadioButton
+                x:Name="RButtonComparisonGreen"
+                Content=" Соответствует: 0 "
+                Foreground="White"
+                Background="#00CD14"
+                BorderThickness="0"
+                Style="{DynamicResource SortRButton}"
+                Checked="RButtonComparisonGreen_Checked"/>
+            <RadioButton
+                x:Name="RButtonComparisonRed"
+                Content=" Не соответствует: 0 "
+                Foreground="White"
+                Background="#CD0000"
+                BorderThickness="0"
+                Style="{DynamicResource SortRButton}"
+                Checked="RButtonComparisonRed_Checked"/>
+            <RadioButton
+                x:Name="RButtonComparisonYellow"
+                Content=" Ошибка: 0 "
+                Background="#FFF84B"
+                BorderThickness="0"
+                Style="{DynamicResource SortRButton}"
+                Checked="RButtonComparisonYellow_Checked"/>
         </StackPanel>
     </Grid>
 </Page>
