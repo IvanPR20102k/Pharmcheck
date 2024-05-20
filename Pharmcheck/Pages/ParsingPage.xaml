@@ -9,6 +9,19 @@
       d:DesignWidth="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Width}"
       Title="ParsingPage">
 
+    <Page.Resources>
+
+        <DataTemplate x:Key="Imports">
+            <Border BorderThickness="1" BorderBrush="Black">
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="{Binding ID}" Margin="5"/>
+                    <TextBlock Text="{Binding ImportDateTime}" Margin="5"/>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+
+    </Page.Resources>
+    
     <Grid Margin="5,0,5,5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
