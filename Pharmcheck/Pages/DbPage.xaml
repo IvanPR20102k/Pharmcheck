@@ -62,7 +62,7 @@
                TargetType="TextBlock">
             <Setter Property="Foreground"
                     Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}, 
-                    Path =Item.ParsingStatus, 
+                    Path=Item.ParsingStatus, 
                     Converter={StaticResource StatusToForegroundConverter}}"/>
         </Style>
 
@@ -272,6 +272,18 @@
                     Style="{DynamicResource SortRButton}"
                     Checked="RButtonProductYellow_Checked"/>
             </StackPanel>
+            <!--<StackPanel
+                Orientation="Horizontal">
+                <Button x:Name="ButtonPrevious"
+                        Content="&lt;"
+                        Margin="2,2,0,2" Click="ButtonPrevious_Click"/>
+                <TextBox x:Name="TextBoxPage"
+                         Text="1"
+                         Margin="0,2,0,2" TextChanged="TextBoxPage_TextChanged"/>
+                <Button x:Name="ButtonNext"
+                        Content=">"
+                        Margin="0,2,2,2" Click="ButtonNext_Click"/>
+            </StackPanel>-->
         </StackPanel>
 
         <DockPanel
@@ -325,7 +337,7 @@
                     <DataGridTextColumn Header="Дата и время" Binding="{Binding ComparisonDateTime}" Width="Auto"/>
                     <DataGridTextColumn Header="Ответ" Binding="{Binding RequestStatus}" Width="Auto"/>
                     <DataGridTextColumn Header="Статус" Binding="{Binding ParsingStatus}" Width="Auto"/>
-                    <DataGridTextColumn Header="Цена" Binding="{Binding Price}" FontWeight="Bold" ElementStyle="{DynamicResource PriceStyle}" Width="Auto"/>
+                    <DataGridTextColumn Header="Цена" Binding="{Binding Price}" FontWeight="Bold" ElementStyle="{StaticResource PriceStyle}" Width="Auto"/>
                     <DataGridTextColumn Header="Отклонение" Binding="{Binding Percentage}" Width="Auto"/>
                     <DataGridTextColumn Header="Аптеки" Binding="{Binding ShopsAmount}" Width="Auto"/>
                 </DataGrid.Columns>

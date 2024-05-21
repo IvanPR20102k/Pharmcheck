@@ -52,13 +52,14 @@ namespace Pharmcheck.Pages
             try
             {
                 if (ComboBoxPharmacies.SelectedItem is not Pharmacy pharmacy) { return; }
+                if (DataGridImportsParse.SelectedItem is not Import import) { return; }
                 ComboBoxPharmacies.IsEnabled = false;
                 DataGridImportsParse.IsEnabled = false;
                 TextBoxImportSearch.IsEnabled = false;
                 ButtonImportsRefresh.IsEnabled = false;
 
                 //Создание очереди для парсинга
-                List<int> queue = Helper.GetDb().Imports.Where(i => i.PharmacyID == pharmacy.ID).OrderBy(i => i.ID).Last().Products.Select(p => p.ID).ToList();
+                List<int> queue = Helper.GetDb().Imports.Where(i => i.ID == import.ID).First().Products.Select(p => p.ID).ToList();
                 int queueCount = queue.Count;
 
                 switch (pharmacy.Name)
@@ -75,9 +76,7 @@ namespace Pharmcheck.Pages
 
                             int shops = Aptekalegko.GetShops(productPage);
 
-                            byte parsingStatus;
-                            if (price > product.PriceMin && price < product.PriceMax) parsingStatus = 1;
-                            else parsingStatus = 2;
+                            byte parsingStatus = price > product.PriceMin && price < product.PriceMax ? (byte)1 : (byte)2;
 
                             string percentage = "0";
                             if (price < product.PriceMin)

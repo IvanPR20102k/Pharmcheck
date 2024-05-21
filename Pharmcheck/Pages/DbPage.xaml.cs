@@ -20,6 +20,7 @@ using CsvHelper.Configuration;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.EntityFrameworkCore;
 using System.CodeDom;
+using AngleSharp.Text;
 
 namespace Pharmcheck.Pages
 {
@@ -28,7 +29,15 @@ namespace Pharmcheck.Pages
     /// </summary>
     public partial class DbPage : Page
     {
-        int productSelection = 0, comparisonSelection = 0;
+        private int productSelection = 0, comparisonSelection = 0, start = 0;
+        //private byte selectionTake = (byte)0;
+        //Dictionary<int, int> selection = new()
+        //{
+        //    { 0, 10 },
+        //    { 1, 50 },
+        //    { 2, 100 },
+        //    { 3, 0 }
+        //};
         public DbPage()
         {
             InitializeComponent();
@@ -188,12 +197,17 @@ namespace Pharmcheck.Pages
 
             switch (productSelection)
             {
-                case 0: DataGridProducts.ItemsSource = pr; break;
-                case 1: DataGridProducts.ItemsSource = pr.Where(p => p.Status == 0); break;
-                case 2: DataGridProducts.ItemsSource = pr.Where(p => p.Status == 1); break;
-                case 3: DataGridProducts.ItemsSource = pr.Where(p => p.Status == 2); break;
-                case 4: DataGridProducts.ItemsSource = pr.Where(p => p.Status == 3); break;
+                case 0: break;
+                case 1: pr = pr.Where(p => p.Status == 0).ToList(); break;
+                case 2: pr = pr.Where(p => p.Status == 1).ToList(); break;
+                case 3: pr = pr.Where(p => p.Status == 2).ToList(); break;
+                case 4: pr = pr.Where(p => p.Status == 3).ToList(); break;
             }
+
+            //DataGridProducts.ItemsSource = pr.Skip(start * selection[selectionTake]).Take(selection[selectionTake]);
+            DataGridProducts.ItemsSource = pr;
+
+
             //ProductGridResize();
         }
         private void LoadComparisons()
@@ -286,6 +300,26 @@ namespace Pharmcheck.Pages
             comparisonSelection = 1;
             LoadComparisons();
         }
+
+        //private void ButtonPrevious_Click(object sender, RoutedEventArgs e)
+        //{
+        //    if (start == 0) { return; }
+        //    TextBoxPage.Text = start.ToString();
+        //}
+
+        //private void ButtonNext_Click(object sender, RoutedEventArgs e)
+        //{
+        //    TextBoxPage.Text = (start + 1).ToString();
+        //}
+
+        //private void TextBoxPage_TextChanged(object sender, TextChangedEventArgs e)
+        //{
+        //    int page = TextBoxPage.Text.ToInteger(0);
+        //    if (page <= 0)
+        //        page = 1;
+        //    start = page - 1;
+        //}
+
         private void RButtonComparisonRed_Checked(object sender, RoutedEventArgs e)
         {
             comparisonSelection = 2;

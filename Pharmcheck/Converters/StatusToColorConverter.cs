@@ -14,7 +14,7 @@ namespace Pharmcheck.Converters
                 (byte)1 => new SolidColorBrush(Color.FromRgb(0, 205, 20)), //Зелёный
                 (byte)2 => new SolidColorBrush(Color.FromRgb(205, 0, 0)), //Красный
                 (byte)3 => new SolidColorBrush(Color.FromRgb(255, 248, 75)), //Жёлтый
-                _ => Brushes.Blue,
+                _ => Brushes.Blue
             };
         }
 
