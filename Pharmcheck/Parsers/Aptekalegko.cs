@@ -43,14 +43,14 @@ namespace Pharmcheck.Parsers
 
         public static float GetPrice(IHtmlDocument page)
         {
-            string price = page.QuerySelector("#__next > div.main__NPU4nQ > main > div.wrapper__Xi6KzX > div.colMain__ISl2H7 > div.row1__BS5ACa > div.col__dJCsMk > div > div > div > div > div.wrapperPrice__MDVygx > span").InnerHtml;
+            string price = page.QuerySelector("#__next > div._layout_main__HL_0j > main > div._wrapper_wrapper__AA1RI > div._productPage_colMain__5IcmH > div._productPage_row1__sdwUG > div._productPage_col__5XC0u > div > div > div > div > div._price_wrapperPrice__5dA7e > span").InnerHtml;
             if (price == "Нет в наличии") return 0;
             float result = Convert.ToSingle((price.Remove(price.Length - 2)).Replace('.',',')); //Удаление " ₽" и замена точки на запятую
             return result;
         }
         public static int GetShops(IHtmlDocument page)
         {
-            string number = Regex.Replace(page.QuerySelector("#__next > div.main__NPU4nQ > main > div.wrapper__Xi6KzX > div.colMain__ISl2H7 > div.row1__BS5ACa > div.col__dJCsMk > div > div > div > a > p").TextContent, "[^0-9]", "");
+            string number = Regex.Replace(page.QuerySelector("#__next > div._layout_main__HL_0j > main > div._wrapper_wrapper__AA1RI > div._productPage_colMain__5IcmH > div._productPage_row1__sdwUG > div._productPage_col__5XC0u > div > div > div > a > p").TextContent, "[^0-9]", "");
             if (number == "") return 0;
             int shopsAmount = Convert.ToInt32(number);
             return shopsAmount;

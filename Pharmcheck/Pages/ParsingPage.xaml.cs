@@ -76,7 +76,7 @@ namespace Pharmcheck.Pages
 
                             int shops = Aptekalegko.GetShops(productPage);
 
-                            byte parsingStatus = price > product.PriceMin && price < product.PriceMax ? (byte)1 : (byte)2;
+                            byte parsingStatus = price >= product.PriceMin && price <= product.PriceMax ? (byte)1 : (byte)2;
 
                             string percentage = "0";
                             if (price < product.PriceMin)
